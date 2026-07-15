@@ -1,0 +1,3859 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<title>灭世之书</title>
+ <style>* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  display: flex;
+  min-height: 100vh;
+  font-family: 'Georgia', 'Times New Roman', '宋体', 'SimHei', serif;
+  background: #121212;
+  color: #e0e0e0;
+  position: relative;
+}
+
+/* 侧边栏 - 桌面端可完全收起 */
+.sidebar {
+  width: 250px;
+  background: #1e1e1e;
+  padding: 30px 20px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  overflow-y: auto;
+  border-right: 1px solid #c0392b;
+  z-index: 100;
+  transform: translateX(0);
+  transition: transform 0.3s ease;
+}
+.sidebar h1 {
+  font-size: 1.3em;
+  color: #e63946;
+  margin-bottom: 25px;
+  padding-bottom: 15px;
+  border-bottom: 2px solid #e63946;
+}
+.sidebar .nav-section h2 {
+  font-size: 1.05em;
+  color: #e63946;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 8px;
+  margin-top: 15px;
+}
+.sidebar .nav-section a {
+  display: block;
+  padding: 8px 0;
+  color: #e63946;
+  font-size: 0.95em;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+.sidebar .nav-section a:hover {
+  color: #ff8c8c;
+}
+.sidebar .sidebar-footer {
+  font-size: 0.7em;
+  color: #999;
+  padding-top: 10px;
+  border-top: 1px solid #c0392b;
+}
+
+/* 侧边栏完全收起（桌面端） */
+.sidebar.collapsed {
+  transform: translateX(-100%);
+}
+
+/* 内容区 */
+.content {
+  margin-left: 250px;
+  padding: 30px 40px;
+  max-width: 900px;
+  width: 100%;
+  background: #121212;
+  position: relative;
+  z-index: 2;
+  transition: margin-left 0.3s ease;
+}
+.content.expanded {
+  margin-left: 0;
+}
+
+/* 桌面端独立汉堡按钮 - 纯文字，无框 */
+.sidebar-toggle-btn {
+  display: none;
+  position: fixed;
+  top: 12px;
+  left: 12px;
+  z-index: 1200;
+  background: transparent;
+  border: none;
+  font-size: 1.6em;
+  color: #e63946;
+  cursor: pointer;
+  padding: 0;
+  margin: 0;
+  line-height: 1;
+  min-width: 0;
+  box-shadow: none;
+  outline: none;
+}
+.sidebar-toggle-btn:hover {
+  color: #ff8c8c;
+}
+/* 侧边栏内部按钮（手机端使用） */
+.sidebar .toggle-btn {
+  background: none;
+  border: none;
+  font-size: 1.4em;
+  cursor: pointer;
+  color: #e63946;
+  padding: 0 0 15px 0;
+  display: block;
+}
+.sidebar .toggle-btn:hover {
+  color: #ff8c8c;
+}
+
+/* ===== 双端适配 ===== */
+@media (min-width: 769px) {
+  /* 桌面端：显示独立按钮，隐藏侧边栏内部按钮 */
+  .sidebar-toggle-btn {
+    display: block;
+  }
+  .sidebar .toggle-btn {
+    display: none !important;
+  }
+}
+
+@media (max-width: 768px) {
+  /* 手机端：侧边栏滑出式，不使用 transform */
+  .sidebar {
+    transform: none !important;
+    transition: left 0.3s ease !important;
+    left: -85%;
+    width: 60%;
+    max-width: 300px;
+    border-right: none;
+    box-shadow: 2px 0 12px rgba(0,0,0,0.5);
+  }
+  .sidebar.open {
+    left: 0;
+  }
+  .sidebar.collapsed {
+    transform: none !important;
+    left: -85% !important;
+  }
+  .content {
+    margin-left: 0 !important;
+  }
+  .content.expanded {
+    margin-left: 0 !important;
+  }
+  /* 手机端：显示侧边栏内部按钮，隐藏独立按钮 */
+  .sidebar-toggle-btn {
+    display: none !important;
+  }
+  .sidebar .toggle-btn {
+    display: block !important;
+  }
+  /* 手机端调整按钮位置 */
+  .sidebar .toggle-btn {
+    position: static;
+    background: transparent !important;
+    color: #e63946;
+    border: none;
+    font-size: 1.4em;
+    padding: 0 0 15px 0;
+  }
+}
+/* 内容区 */
+.content {
+  margin-left: 250px;
+  padding: 30px 40px;
+  max-width: 900px;
+  width: 100%;
+  background: #121212;
+  position: relative;
+  z-index: 2;
+}
+.content section {
+  display: none;
+}
+.content section.active {
+  display: block;
+}
+
+/* 标题 */
+.content h1 {
+  font-size: 2em;
+  margin-bottom: 10px;
+  color: #e63946;
+  border-left: 4px solid #e63946;
+  padding-left: 15px;
+}
+.content h2 {
+  font-size: 1.7em;
+  margin: 35px 0 15px;
+  color: #e63946;
+  border-bottom: 1px solid #c0392b;
+  padding-bottom: 8px;
+}
+.content h3 {
+  font-size: 1.2em;
+  margin: 20px 0 10px;
+  color: #e63946;
+}
+.content p, .content li {
+  margin: 18px 0;
+  line-height: 1.6;
+  color: #d0d0d0;
+}
+.content a {
+  color: #e63946;
+  text-decoration: none;
+}
+.content a:hover {
+  text-decoration: underline;
+  color: #ff8c8c;
+}
+
+/* 表格 */
+.content table {
+  width: 100% !important;
+  border-collapse: collapse !important;
+  margin: 15px 0 !important;
+  background: #1e1e1e !important;
+  border: 1px solid #c0392b !important;
+  border-radius: 8px;
+  overflow: hidden;
+  table-layout: fixed;
+}
+.content th, .content td {
+  border: 1px solid #c0392b !important;
+  padding: 8px 12px !important;
+  text-align: left;
+  color: #e0e0e0 !important;
+  background: transparent !important;
+  word-break: break-word;
+}
+.content th {
+  background: #2a2a2a !important;
+  font-weight: 600;
+  color: #e63946 !important;
+}
+.content tbody tr:nth-child(even) {
+  background: #252525 !important;
+}
+.content tbody tr:hover {
+  background: #2e2e2e !important;
+}
+
+/* 引用块 */
+.content blockquote {
+  border-left: 4px solid #e63946 !important;
+  padding: 16px 18px !important;
+  margin: 18px 0 !important;
+  color: #d0d0d0 !important;
+  background: #1a1a1a !important;
+  line-height: 1.7;
+  border-radius: 8px;
+  border-top: 1px solid #c0392b !important;
+  border-right: 1px solid #c0392b !important;
+  border-bottom: 1px solid #c0392b !important;
+}
+
+/* 状态标签 */
+#lazy-tools span {
+  background-color: #2a2a2a !important;
+  color: #e63946 !important;
+  border: 1px solid #c0392b !important;
+  border-radius: 20px;
+  padding: 4px 12px;
+  font-size: 0.9em;
+}
+#lazy-tools span:hover {
+  background-color: #3a3a3a !important;
+}
+
+/* 核心机制速览表格 - 木板桥样式 */
+.core-table {
+  width: 100% !important;
+  background: transparent !important;
+  border: none !important;
+  bor
+  border-radius: 0 !important;
+  padding: 8px 0 !important;
+  position: relative;
+}
+.core-table tbody {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+.core-table tr {
+  display: block;
+  position: relative;
+  margin-bottom: 24px;
+}
+.core-table tr:last-child {
+  margin-bottom: 0;
+}
+.core-table tr td {
+  display: block;
+  background: #141414;
+  border-radius: 16px;
+  border: 2px solid #c0392b;
+  border-left: none;
+  border-right: none;
+  padding: 12px 18px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.5);
+  transition: transform 0.1s ease;
+}
+.core-table tr:hover td {
+  transform: scale(1.01);
+  background: #1e1e1e;
+}
+.core-table td:first-child {
+  font-weight: bold;
+  color: #e63946;
+  border-bottom: 1px dashed #c0392b;
+  margin-bottom: 0;
+}
+.core-table td:last-child {
+  color: #e0e0e0;
+  margin-top: 16px;
+  padding-top: 4px;
+}
+.core-table tr:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  bottom: -12px;
+  left: 0;
+  width: 100%;
+  height: 8px;
+  background: #2a2a2a;
+  border-radius: 4px;
+  box-sizing: border-box;
+  z-index: 2;
+}
+.core-table tr:not(:last-child)::after {
+  margin-left: -8px;
+  margin-right: -8px;
+  width: calc(100% + 16px);
+}
+@media (max-width: 768px) {
+  .core-table {
+    border-left-width: 6px !important;
+    border-right-width: 6px !important;
+    padding: 4px 0 !important;
+  }
+  .core-table tr {
+    margin-bottom: 18px;
+  }
+  .core-table tr:not(:last-child)::after {
+    bottom: -9px;
+    height: 6px;
+    border-left-width: 6px;
+    border-right-width: 6px;
+  }
+  .core-table td:last-child {
+    margin-top: 12px;
+  }
+}
+
+.content hr {
+  border-color: #c0392b;
+}
+.content pre {
+  background: #1e1e1e;
+  border: 1px solid #c0392b;
+  color: #e0e0e0;
+  padding: 12px;
+  border-radius: 6px;
+}
+
+.toggle-btn {
+  background: none;
+  border: none;
+  font-size: 1.4em;
+  cursor: pointer;
+  color: #e63946;
+  padding: 0 0 15px 0;
+  display: block;
+}
+.toggle-btn:hover {
+  color: #ff8c8c;
+}
+
+/* 遮罩层 */
+.sidebar-overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0,0,0,0.6);
+  z-index: 1050;
+}
+.sidebar-overlay.show {
+  display: block;
+}
+
+/* 手机端 */
+@media (max-width: 768px) {
+  body { flex-direction: column; background: #121212; }
+  .sidebar {
+    position: fixed;
+    top: 0;
+    left: -85%;
+    width: 60%;
+    max-width: 300px;
+    height: 100%;
+    padding: 20px;
+    z-index: 1100;
+    overflow-y: auto;
+    background: #1e1e1e;
+    box-shadow: 2px 0 12px rgba(0,0,0,0.5);
+    transition: left 0.3s ease;
+    border-right: none;
+  }
+  .sidebar.open { left: 0; }
+  .sidebar h1 { font-size: 1.3em; }
+  .sidebar .nav-section a { font-size: 0.95em; text-align: left; }
+  .sidebar .nav-section a::before { content: none; }
+  .content {
+    margin-left: 0;
+    padding: 15px;
+    background: #121212;
+  }
+  .content p, .content li {
+    margin: 14px 0;
+    line-height: 1.8;
+    color: #d0d0d0;
+  }
+  .toggle-btn {
+    display: block;
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    z-index: 1200;
+    background: transparent !important;
+    color: #e63946;
+    border: none;
+    font-size: 1.4em;
+    cursor: pointer;
+    padding: 8px;
+    min-width: 44px;
+    text-align: center;
+    box-shadow: none;
+  }
+  .sidebar-overlay.show { display: block; }
+  .content table, .content th, .content td {
+    width: 100% !important;
+    border-color: #c0392b !important;
+  }
+}
+@media (max-width: 768px) {
+  /* ... 其他样式 ... */
+  
+  /* 修复手机端侧边栏按钮定位 */
+  .sidebar .toggle-btn {
+    display: block !important;
+    position: fixed !important;
+    top: 10px !important;
+    right: 10px !important;
+    z-index: 1200 !important;
+    background: transparent !important;
+    color: #e63946 !important;
+    border: none !important;
+    font-size: 1.4em !important;
+    padding: 8px !important;
+    min-width: 44px !important;
+    text-align: center !important;
+  }
+}
+
+/* 笔记本窄屏 */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .sidebar { width: 220px; }
+}
+
+/* 修复游戏流程示例导致的问题 */
+.toggle-btn {
+  display: block !important;
+  color: #e63946 !important;
+  background: transparent !important;
+  border: none !important;
+  font-size: 1.4em !important;
+  padding: 0 0 15px 0 !important;
+}
+.content a {
+  color: #e63946 !important;
+}
+.content a:hover {
+  color: #ff8c8c !important;
+}
+/* 修复跑团记录面板溢出 */
+.content pre {
+  overflow-x: auto;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+/* 强制侧边栏按钮可见 */
+.toggle-btn {
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  z-index: 1200 !important;
+}
+/* 电脑端侧边栏固定滚动 */
+@media (min-width: 769px) {
+  body {
+    overflow: hidden;
+    height: 100vh;
+  }
+  .content {
+    overflow-y: auto;
+    height: 100vh;
+  }
+}
+/* 移除卡片内的小六芒星 */
+#kp-basic > p::before,
+#kp-basic > ul::before,
+#kp-basic > ol::before,
+#kp-basic > blockquote::before,
+#kp-basic > div::before,
+#kp-basic > p::after,
+#kp-basic > ul::after,
+#kp-basic > ol::after,
+#kp-basic > blockquote::after,
+#kp-basic > div::after,
+#shenzhan-kp > p::before,
+#shenzhan-kp > ul::before,
+#shenzhan-kp > ol::before,
+#shenzhan-kp > blockquote::before,
+#shenzhan-kp > div::before,
+#shenzhan-kp > p::after,
+#shenzhan-kp > ul::after,
+#shenzhan-kp > ol::after,
+#shenzhan-kp > blockquote::after,
+#shenzhan-kp > div::after {
+  content: none !important;
+}
+
+/* 异步规则卡片样式 - 木板桥风格（与首页核心机制速览一致） */
+.async-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  margin: 20px 0;
+  padding: 8px 0;
+}
+
+.async-card {
+  background: #141414;
+  border-radius: 16px;
+  border: 2px solid #c0392b;
+  border-left: none;
+  border-right: none;
+  padding: 18px 24px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.5);
+  transition: transform 0.15s ease, background 0.2s;
+  position: relative;
+}
+
+.async-card:hover {
+  transform: translateY(-3px);
+  background: #1e1e1e;
+}
+
+.async-title {
+  font-size: 1.3em;
+  font-weight: bold;
+  color: #e63946;
+  border-bottom: 1px dashed #c0392b;
+  margin-bottom: 12px;
+  padding-bottom: 6px;
+}
+
+.async-row {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 12px 0;
+}
+
+.async-label {
+  font-weight: bold;
+  color: #e63946;
+  width: 110px;
+  flex-shrink: 0;
+}
+
+.async-value {
+  color: #e0e0e0;
+  flex: 1;
+}
+
+.async-card ul {
+  margin: 8px 0 0 20px;
+  padding-left: 0;
+}
+
+.async-card li {
+  margin: 8px 0;
+  line-height: 1.5;
+  color: #d0d0d0;
+}
+
+.async-card p {
+  margin: 10px 0;
+  color: #d0d0d0;
+}
+
+/* 手机端适配 */
+@media (max-width: 768px) {
+  .async-cards {
+    border-left-width: 6px;
+    border-right-width: 6px;
+    gap: 14px;
+  }
+  .async-card {
+    padding: 14px 18px;
+  }
+  .async-label {
+    width: 80px;
+  }
+}
+/* DLC扩展卡片样式 */
+.dlc-card {
+  background: #141414;
+  border-radius: 16px;
+  border: 2px solid #c0392b;
+  border-left: none;
+  border-right: none;
+  padding: 18px 24px;
+  margin: 28px 0;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.5);
+  transition: transform 0.15s ease, background 0.2s;
+}
+
+.dlc-card:hover {
+  transform: translateY(-3px);
+  background: #1e1e1e;
+}
+
+.dlc-card h2 {
+  margin-top: 0;
+  border-bottom: 1px dashed #c0392b;
+  padding-bottom: 8px;
+  font-size: 1.7em;
+}
+
+.dlc-card p {
+  margin: 12px 0;
+}
+
+.dlc-link {
+  margin: 16px 0;
+  text-align: center;
+}
+
+.dlc-link a {
+  display: inline-block;
+  background: #2a0f0a;
+  border: 1px solid #e63946;
+  border-radius: 40px;
+  padding: 8px 28px;
+  font-size: 1.2em;
+  font-weight: bold;
+  color: #e63946;
+  text-decoration: none;
+  transition: all 0.2s;
+}
+
+.dlc-link a:hover {
+  background: #e63946;
+  color: #141414;
+  box-shadow: 0 0 12px #e63946;
+}
+
+.dlc-note {
+  font-size: 0.9em;
+  color: #aaa;
+  margin-top: 12px;
+  border-top: 1px dashed #c0392b;
+  padding-top: 12px;
+}
+/* 首页引言卡片 */
+.intro-card {
+background: #1a1a1a;
+  border-left: 6px solid #e63946;
+  border-radius: 16px;
+  padding: 20px 28px;
+  margin: 20px 0 30px 0;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+  transition: transform 0.2s ease;
+}
+
+.intro-card:hover {
+  transform: translateX(4px);
+}
+
+.intro-card h1 {
+  margin-bottom: 12px;
+  border-left: none;
+  padding-left: 0;
+  font-size: 2em;
+}
+
+.intro-text p {
+  margin: 12px 0;
+  line-height: 1.6;
+  color: #d0d0d0;
+}
+
+.intro-text p:first-child {
+  font-style: italic;
+  color: #e6c8a0;
+}
+/* ========== 全局动态效果 ========== */
+
+/* 1. 入场动画（所有 .content section 淡入+轻微上浮） */
+.content section {
+  animation: fadeInUp 0.5s ease-out;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* 2. 所有卡片悬停发光 + 上浮（包括核心机制、异步规则、DLC、引言、基础规则中的段落等） */
+.core-table tr td,
+.async-card,
+.dlc-card,
+.intro-card,
+.ritual-card,
+#kp-basic > p,
+#kp-basic > ul,
+#kp-basic > ol,
+#kp-basic > blockquote,
+#kp-basic > div:not(.core-table):not(.changelog):not(.derived-table),
+#shenzhan-kp > p,
+#shenzhan-kp > ul,
+#shenzhan-kp > ol,
+#shenzhan-kp > blockquote,
+#shenzhan-kp > div:not(.derived-table):not(.switch-table) {
+  transition: all 0.25s ease;
+}
+
+.core-table tr td:hover,
+.async-card:hover,
+.dlc-card:hover,
+.intro-card:hover,
+.ritual-card:hover,
+#kp-basic > p:hover,
+#kp-basic > ul:hover,
+#kp-basic > ol:hover,
+#kp-basic > blockquote:hover,
+#kp-basic > div:hover,
+#shenzhan-kp > p:hover,
+#shenzhan-kp > ul:hover,
+#shenzhan-kp > ol:hover,
+#shenzhan-kp > blockquote:hover,
+#shenzhan-kp > div:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 0 18px rgba(230, 57, 70, 0.5), 0 8px 16px rgba(0,0,0,0.4);
+}
+
+/* 3. 只有页面的主标题（每个 section 的 h1）闪烁发光 */
+.content section > h1 {
+  animation: gentleFlicker 3s infinite;
+}
+
+@keyframes gentleFlicker {
+  0%, 100% { text-shadow: 0 0 2px #e63946; }
+  50% { text-shadow: 0 0 10px #e63946, 0 0 4px #ff8c8c; }
+}
+
+/* 4. 表格行悬停光效 */
+.content tbody tr:hover {
+  background: #2e2e2e !important;
+  box-shadow: inset 0 0 6px #e63946;
+  transition: all 0.1s ease;
+}
+
+/* 5. 侧边栏链接悬停滑动效果 */
+.sidebar .nav-section a {
+  transition: all 0.2s ease;
+}
+.sidebar .nav-section a:hover {
+  transform: translateX(6px);
+  letter-spacing: 1px;
+}
+
+/* 6. 核心机制速览卡片内单元格悬停放大 */
+.core-table tr td:hover {
+  transform: scale(1.01);
+}
+
+/* 7. 指引等级判定参考表格 - 动态效果（桌面端和手机端） */
+.guide-ref-table {
+  transition: all 0.2s ease;
+}
+.guide-ref-table tbody tr {
+  transition: all 0.2s ease;
+}
+.guide-ref-table tbody tr:hover {
+  background: #2a1a14 !important;
+  box-shadow: inset 0 0 8px #e63946;
+  transform: scale(1.01);
+}
+@media (max-width: 768px) {
+  .guide-ref-table tbody tr:hover {
+    transform: scale(1.02);
+  }
+}
+/* 指引等级判定参考表格 - 动态效果 */
+.guide-ref-table {
+  transition: all 0.2s ease;
+}
+
+/* 表格行悬停效果 */
+.guide-ref-table tbody tr {
+  transition: all 0.2s ease;
+}
+
+.guide-ref-table tbody tr:hover {
+  background: #2a1a14 !important;
+  box-shadow: inset 0 0 8px #e63946;
+  transform: scale(1.01);
+}
+
+/* 手机端悬停效果微调 */
+@media (max-width: 768px) {
+  .guide-ref-table tbody tr:hover {
+    transform: scale(1.02);
+  }
+}
+/* 额外规则速查与跑团范本 - 动态出场与悬停效果 */
+
+/* 确保两个 section 有入场动画（如果全局动画已生效可忽略，但加上无妨） */
+#rule-switches,
+#demo-round {
+  animation: fadeInUp 0.5s ease-out;
+}
+
+/* 额外规则速查表格行悬停发光 */
+.switch-table tbody tr {
+  transition: all 0.2s ease;
+}
+.switch-table tbody tr:hover {
+  background: #2a1a14 !important;
+  box-shadow: inset 0 0 6px #e63946;
+  transform: scale(1.01);
+}
+
+/* 额外规则速查引用块悬停 */
+#rule-switches blockquote {
+  transition: all 0.25s ease;
+}
+#rule-switches blockquote:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 0 12px rgba(230, 57, 70, 0.4);
+  background: #1f1008;
+}
+
+/* 跑团范本引用块悬停 */
+#demo-round blockquote {
+  transition: all 0.25s ease;
+}
+#demo-round blockquote:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 0 12px rgba(230, 57, 70, 0.4);
+  background: #1f1008;
+}
+
+/* 跑团范本 pre 代码块悬停发光 */
+#demo-round pre {
+  transition: all 0.2s ease;
+}
+#demo-round pre:hover {
+  border-color: #e63946;
+  box-shadow: 0 0 8px #e63946;
+  background: #1a1a1a;
+}
+
+/* 跑团范本中所有 h2 标题悬停效果（可选） */
+#demo-round h2 {
+  transition: all 0.2s ease;
+}
+#demo-round h2:hover {
+  text-shadow: 0 0 4px #e63946;
+  padding-left: 8px;
+}
+/* 基础KP守则中的卡片样式 */
+.kp-card {
+  background: #141414;
+  border-radius: 16px;
+  border: 2px solid #c0392b;
+  border-left: none;
+  border-right: none;
+  padding: 18px 24px;
+  margin: 24px 0;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.5);
+  transition: transform 0.15s ease, background 0.2s;
+}
+
+.kp-card:hover {
+  transform: translateY(-3px);
+  background: #1e1e1e;
+}
+
+.kp-card h2 {
+  margin-top: 0;
+  border-bottom: 1px dashed #c0392b;
+  padding-bottom: 8px;
+}
+.kp-card {
+  background: #141414;
+  border-radius: 16px;
+  border: 2px solid #c0392b;
+  border-left: none;
+  border-right: none;
+  padding: 18px 24px;
+  margin: 24px 0;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.5);
+  transition: transform 0.15s ease, background 0.2s;
+}
+.kp-card:hover {
+  transform: translateY(-3px);
+  background: #1e1e1e;
+}
+.kp-card h2 {
+  margin-top: 0;
+  border-bottom: 1px dashed #c0392b;
+  padding-bottom: 8px;
+}
+.kp-card hr {
+  margin: 16px 0;
+  border-color: #c0392b;
+}
+.player-directory a {
+  color: #e63946;
+  text-decoration: none;
+}
+.player-directory a:hover {
+  text-decoration: underline;
+}
+/* 编号菱形卡片 */
+.num-diamond-card {
+  position: relative;
+  background: #141414;
+  border: 2px solid #c0392b;
+  border-radius: 16px;
+  padding: 20px 24px;
+  margin: 20px 0;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.5);
+  transition: transform 0.15s ease, background 0.2s;
+}
+
+.num-diamond-card:hover {
+  transform: translateY(-3px);
+  background: #1e1e1e;
+}
+
+/* 左上角编号 */
+.card-num {
+  position: absolute;
+  top: 12px;
+  left: 18px;
+  font-size: 1.2em;
+  font-weight: bold;
+  color: #e63946;
+  background: rgba(0,0,0,0.4);
+  padding: 2px 8px;
+  border-radius: 20px;
+  border-left: 2px solid #e63946;
+}
+
+/* 右下角菱形 */
+.card-diamond {
+  position: absolute;
+  bottom: 12px;
+  right: 18px;
+  font-size: 1.4em;
+  color: #e63946;
+  opacity: 0.7;
+  transition: opacity 0.2s;
+}
+
+.num-diamond-card:hover .card-diamond {
+  opacity: 1;
+}
+/* ========== 统一规则条目卡片样式 ========== */
+.rule-card {
+  background: #141414;
+  border: 2px solid #c0392b;
+  border-left: none;
+  border-right: none;
+  border-radius: 20px;
+  padding: 16px 20px 16px 60px;
+  margin: 16px 0;
+  position: relative;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+}
+.rule-card:hover {
+  transform: translateX(4px);
+  background: #1e1e1e;
+  box-shadow: 0 0 12px rgba(230, 57, 70, 0.4);
+}
+
+/* 左上角编号菱形 */
+.rule-num {
+  position: absolute;
+  left: 12px;
+  top: 16px;
+  background: #2a0f0a;
+  border: 1px solid #c0392b;
+  border-radius: 30px;
+  padding: 4px 12px;
+  font-size: 0.9em;
+  font-weight: bold;
+  color: #e63946;
+  letter-spacing: 1px;
+  box-shadow: 0 0 4px rgba(0,0,0,0.5);
+  backdrop-filter: blur(2px);
+}
+
+/* 右下角菱形装饰 */
+.rule-diamond {
+  position: absolute;
+  bottom: 12px;
+  right: 16px;
+  font-size: 1.3em;
+  color: #e63946;
+  opacity: 0.5;
+  transition: opacity 0.2s;
+}
+.rule-card:hover .rule-diamond {
+  opacity: 1;
+  text-shadow: 0 0 4px #e63946;
+}
+
+/* 规则内容文字 */
+.rule-content {
+  color: #e0e0e0;
+  line-height: 1.6;
+  font-size: 0.95em;
+}
+.rule-content strong {
+  color: #e63946;
+}
+
+/* 针对玩家规则中 ◆ 条目的统一转换 */
+.rule-card-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin: 20px 0;
+}
+</style>
+</head>
+<body>
+<div class="sidebar">
+  <button class="toggle-btn" onclick="toggleSidebar()" title="收起/展开侧边栏">☰</button>
+  <h1>灭世之书</h1>
+  <div class="nav-section">
+    <h2>〖核心规则〗必读</h2>
+    <a href="#home" onclick="switchSection('home')" data-short="首">首页</a>
+    <a href="#kp-basic" onclick="switchSection('kp-basic')" data-short="K">KP 基础守则</a>
+    <a href="#player-basic" onclick="switchSection('player-basic')" data-short="玩">玩家规则</a>
+    <a href="#demo-round" onclick="switchSection('demo-round')" data-short="例">游戏流程示例</a>
+<a href="#async-rules" onclick="switchSection('async-rules')" data-short="异">基础规则补充</a>
+  </div>
+  <div class="nav-section">
+    <h2>〖DLC〗额外内容</h2>
+    <a href="#shenzhan-kp" onclick="switchSection('shenzhan-kp')" data-short="战">神战 KP 守则</a>
+    <a href="#shenzhan-player" onclick="switchSection('shenzhan-player')" data-short="神">神战玩家规则</a>
+    <a href="#rule-switches" onclick="switchSection('rule-switches')" data-short="查">额外规则速查</a>
+  </div>
+  <div class="nav-section">
+    <h2>〖KP工具包〗速查</h2>
+    <a href="#kp-toolkit" onclick="switchSection('kp-toolkit')" data-short="模">可用空白模板</a>
+    <a href="#town-table" onclick="switchSection('town-table')" data-short="城">城镇状态表</a>
+    <a href="#guideline-ref" onclick="switchSection('guideline-ref')" data-short="指">指引等级判定</a>
+    <a href="#portable-tools" onclick="switchSection('portable-tools')" data-short="工">便携工具</a>
+    <a href="#quick-start-pack" onclick="switchSection('quick-start-pack')" data-short="包">快速开局包</a>
+    <a href="#lazy-tools" onclick="switchSection('lazy-tools')" data-short="状">状态变化参考</a>
+  </div>
+  <p class="sidebar-footer" style="font-size: 0.7em; color: #999; padding-top: 10px; border-top: 1px solid #c0392b;">
+   版本 v1.2 <br>
+    作者：秦月<br>
+    联系QQ：551814605<br>
+  </p>
+</div>
+<!-- 遮罩层（手机端侧边栏背景） -->
+</div>   <!-- 闭合 sidebar -->
+
+<!-- 桌面端独立汉堡按钮 -->
+<button class="sidebar-toggle-btn" onclick="toggleSidebar()" title="切换侧边栏">☰</button>
+
+<!-- 遮罩层（手机端侧边栏背景） -->
+<div class="sidebar-overlay" onclick="closeSidebar()"></div>
+<div class="sidebar-overlay" onclick="closeSidebar()"></div>
+  <!-- 背景六芒星（固定居中） -->
+  <div class="bg-hexagram"></div>
+<div class="bg-hexagram bg-hexagram-rotate"></div>
+<div class="content">
+<section id="home" class="active">
+
+
+<div class="intro-card">
+  <h1>灭世之书</h1>
+  <div class="intro-text">
+    <p>《灭世之书》是一款PVP全秘密团的TRPG规则，单局5~6小时。</p>
+    <p>此规则以灭世为主，想必您阅读了这本灭世之书后，会更加得心应手地收割那些虫子。</p>
+  </div>
+</div>
+  <hr style="border: none; border-top: 1px solid #c0392b; margin: 12px 0;">
+  <p style="font-size: 0.9em; color: #aaa; margin-bottom: 6px;">若您是第1次阅读本书，我个人推荐按照以下顺序阅读：</p>
+
+  <table style="margin: 20px 0; width: 100%;">
+    <thead>
+      <tr><th style="width:50%;">快速上手路径</th><th style="width:50%;">完整理解路径</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>
+          ① <a href="#kuaisu" onclick="switchSection('kp-basic'); setTimeout(function(){ document.getElementById('kuaisu').scrollIntoView(); }, 100);">快速开始</a><br>
+          ② <a href="#zhiyin" onclick="switchSection('kp-basic'); setTimeout(function(){ document.getElementById('zhiyin').scrollIntoView(); }, 100);">指引等级判定</a><br>
+          ③ <a href="#morichanchu" onclick="switchSection('kp-basic'); setTimeout(function(){ document.getElementById('morichanchu').scrollIntoView(); }, 100);">使用AI工具</a>
+          <br>（体验游戏流程）
+          <br>（辅助工作）
+        </td>
+        <td>
+          ① <a href="#qianyan" onclick="switchSection('kp-basic'); setTimeout(function(){ document.getElementById('qianyan').scrollIntoView(); }, 100);">前言</a><br>
+          ② <a href="#jichu" onclick="switchSection('kp-basic'); setTimeout(function(){ document.getElementById('jichu').scrollIntoView(); }, 100);">基础规则</a><br>
+          ③ <a href="#zhiye" onclick="switchSection('kp-basic'); setTimeout(function(){ document.getElementById('zhiye').scrollIntoView(); }, 100);">职业裁决</a><br>
+          ④ <a href="#zainan" onclick="switchSection('kp-basic'); setTimeout(function(){ document.getElementById('zainan').scrollIntoView(); }, 100);">灾难变动</a><br>
+          ⑤ <a href="#zhiyin" onclick="switchSection('kp-basic'); setTimeout(function(){ document.getElementById('zhiyin').scrollIntoView(); }, 100);">指引等级</a>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <blockquote style="background: #1a1a1a; border-left: 4px solid #e63946; border-top: 1px solid #c0392b; border-right: 1px solid #c0392b; border-bottom: 1px solid #c0392b; padding: 12px 18px; margin-bottom: 16px; color: #d0d0d0;">
+    <p>以上路径均在<a href="#kp-basic" onclick="switchSection('kp-basic')"><strong>KP基础守则</strong></a>中，点击即可跳转。玩家只需阅读基础玩家规则即可</p>
+    <p>若想参考实际对局过程，可查阅<a href="#demo-round" onclick="switchSection('demo-round')">
+      <br><strong>〖游戏流程示例〗</strong></a><br>
+    （手机端点击右上角按钮打开导航）<br>
+   辅助工作/单人游玩AI模型链接在<a href="#kp-toolkit" onclick="switchSection('kp-toolkit')"><strong>KP工具包</strong></a></p>
+  </blockquote>
+
+<h2>核心机制速览</h2>
+<div class="kp-card" style="margin-top: 20px;">
+  <p style="margin: 0; font-size: 0.9em; color: #e0e0e0;">详细模板和示例见左侧「KP工具包」和「游戏流程示例」</p>
+</div>
+
+  <style>
+    @media (max-width: 768px) {
+      .core-table, .core-table thead, .core-table tbody, .core-table th, .core-table td, .core-table tr { display: block; }
+      .core-table thead tr { display: none; }
+      .core-table tr { margin-bottom: 12px; border: 1px solid #c0392b; padding: 10px; background: #1e1e1e; }
+      .core-table td { border: none; padding: 4px 0; }
+      .core-table td:first-child { font-weight: bold; font-size: 1.05em; color: #e63946; }
+      .core-table td:last-child { color: #e0e0e0; }
+    }
+  </style>
+  <table class="core-table">
+    <thead>
+      <tr><th style="width:18%;">环节</th><th style="width:82%;">内容</th></tr>
+    </thead>
+    <tbody>
+    <tr><td>① 投放末日</td>
+    <td>伟大的神明从不亲自下场，因此，为了让世界更加耐玩，您需要通过信徒的信仰力投放末日</td></tr>
+      <tr><td>② 下达指引</td><td>您的指引越精确，信徒献上的信仰也越多，因此，为了获得胜利，还请诸位神明慎重考虑</td></tr>
+      <tr><td>③ 信徒反馈</td><td>您的信徒本质上也是虫子，他们有自己那可悲的思想、可悲的行动，甚至会违抗您的命令，带来不可预知的变数，这一点是必须要郑重考虑的</td></tr>
+      <tr><td>④ 世界播报</td><td>每个月您都可以看到这个世界的虫子们在您掌下挣扎，当然，您的信徒也是其中之一</td></tr>
+      <tr><td>⑤ 活到最后</td><td>请您确保您的信徒在本次游戏中能活到最后，如果直接炸掉世界，游戏可就没意思了</td></tr>
+    </tbody>
+  </table>
+
+<div class="dlc-card">
+  <h2>DLC扩展</h2>
+  <p>有了更多丰富的内容和规则，游戏才有趣不是吗？神明大人您可以增加额外的规则</p>
+  <div class="dlc-link">
+    <a href="#shenzhan-kp" onclick="switchSection('shenzhan-kp')">〖神战规则〗</a>
+  </div>
+  <p class="dlc-note">见左侧<strong>进阶DLC</strong>栏目，每条规则可单独开启或关闭</p>
+</div>
+  <h2>更新日志</h2>
+<table class="changelog">
+  <thead>
+    <tr><th>版本</th><th>日期</th><th>更新内容</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+ <td>v1.2</td>
+   <td>2026.7月16日</td>
+   <td>更新内容：
+<br>Bug修复
+<br>AI游戏模拟
+<br>美化</td>
+    </tr>
+  </tbody>
+  </table>
+  <hr>
+  <p style="color: #aaa; font-size: 0.85em;">
+    <br>版本 v1.2· 作者：秦月 · QQ：551814605<br>
+    所有模板、工具、AI辅助链接均在「KP工具包」中
+  </p>
+ </section>
+<section id="kp-basic">
+  <!-- 标题卡片 -->
+  <div class="kp-card">
+    <h2 id="qianyan">基础KP守则</h2>
+  </div>
+  <!-- 前言卡片 -->
+  <div class="kp-card">
+    <p style="font-style: italic; color: #e6c8a0; margin-bottom: 12px;">前言</p>
+    <ol style="margin-top: 8px;">
+      <li>本书里的所有建议（规则）、数值、表格，都是你的工具箱基础建议是为了保证您在收割时的基本娱乐与体验，但当你觉得某条建议不好用，或者你的直觉告诉你"这样判会更有趣"，可相信你的直觉，跳过规则。玩家不会知道你"应该"怎么判，你不必拥有压力
+        <br>如需启用扩展规则，请参阅神战KP守则。</li>
+      <li>你会发现这本书里有很多地方写着
+        <br>"由KP决定"，那是因为本团作为PVP的随机性以及可玩性所留出的操作空间，并非空白。本团的核心点就是随机性以及战争迷雾的不可预测性，推文质量并非硬性要求，相关方面有AI工具可用。</li>
+    </ol>
+  </div>
+<!-- 快捷工具（纯文本） -->
+<blockquote>
+  <p><strong>快捷工具</strong></p>
+  <p>- <a href="https://pastebin.com/yUsnLJyP" target="_blank">事件/角色/末日生成模型</a>（可复制使用）</p>
+  <p>- <a href="https://chat.deepseek.com" target="_blank">打开 DeepSeek 网页版</a></p>
+</blockquote>
+
+<hr>
+
+<!-- 基础KP守则 · 椭圆菱形目录卡片 -->
+<div class="kp-card elliptic-card" style="position: relative; border-radius: 60px; background: #141414; border: 2px solid #c0392b; border-left: none; border-right: none; padding: 20px 32px; margin: 24px 0; box-shadow: 0 4px 12px rgba(0,0,0,0.5); transition: all 0.2s ease;">
+  <div style="position: absolute; top: 12px; left: 20px; font-size: 1.6em; color: #e63946; opacity: 0.6;">♦</div>
+  <div style="position: absolute; bottom: 12px; right: 20px; font-size: 1.6em; color: #e63946; opacity: 0.6;">♦</div>
+  <div style="text-align: center; margin-bottom: 16px;">
+    <span style="display: inline-block; background: #2a0f0a; padding: 4px 20px; border-radius: 40px; color: #e63946; font-weight: bold; letter-spacing: 2px;">✦ 快速查阅目录 ✦</span>
+  </div>
+  <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 12px 20px;">
+    <a href="#kuaisu" style="background: #1e1e1e; border: 1px solid #c0392b; border-radius: 40px; padding: 6px 20px; color: #e63946; text-decoration: none; font-size: 0.95em; transition: all 0.2s;">◈ 快速开始</a>
+    <a href="#caijue" style="background: #1e1e1e; border: 1px solid #c0392b; border-radius: 40px; padding: 6px 20px; color: #e63946; text-decoration: none; font-size: 0.95em; transition: all 0.2s;">◈ 判定参照</a>
+    <a href="#shuzhi" style="background: #1e1e1e; border: 1px solid #c0392b; border-radius: 40px; padding: 6px 20px; color: #e63946; text-decoration: none; font-size: 0.95em; transition: all 0.2s;">◈ 角色数值</a>
+    <a href="#jichu" style="background: #1e1e1e; border: 1px solid #c0392b; border-radius: 40px; padding: 6px 20px; color: #e63946; text-decoration: none; font-size: 0.95em; transition: all 0.2s;">◈ 基础规则</a>
+    <a href="#morichanchu" style="background: #1e1e1e; border: 1px solid #c0392b; border-radius: 40px; padding: 6px 20px; color: #e63946; text-decoration: none; font-size: 0.95em; transition: all 0.2s;">◈ 末日产出</a>
+    <a href="#bobao" style="background: #1e1e1e; border: 1px solid #c0392b; border-radius: 40px; padding: 6px 20px; color: #e63946; text-decoration: none; font-size: 0.95em; transition: all 0.2s;">◈ 世界播报</a>
+    <a href="#weidu" style="background: #1e1e1e; border: 1px solid #c0392b; border-radius: 40px; padding: 6px 20px; color: #e63946; text-decoration: none; font-size: 0.95em; transition: all 0.2s;">◈ 维度参照</a>
+    <a href="#shili" style="background: #1e1e1e; border: 1px solid #c0392b; border-radius: 40px; padding: 6px 20px; color: #e63946; text-decoration: none; font-size: 0.95em; transition: all 0.2s;">◈ 势力数据</a>
+    <a href="#zhiye" style="background: #1e1e1e; border: 1px solid #c0392b; border-radius: 40px; padding: 6px 20px; color: #e63946; text-decoration: none; font-size: 0.95em; transition: all 0.2s;">◈ 职业裁决</a>
+  </div>
+  <div style="text-align: center; margin-top: 14px; font-size: 0.75em; color: #aaa;">
+    <span>⬥ 点击任意条目快速跳转 ⬥</span>
+  </div>
+</div>
+<style>
+  .elliptic-card a:hover {
+    background: #c0392b !important;
+    color: #141414 !important;
+    transform: translateY(-2px);
+    box-shadow: 0 0 8px #e63946;
+  }
+  .elliptic-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 0 18px rgba(230, 57, 70, 0.5);
+  }
+</style>
+<hr>
+<h2 id="kuaisu">快速开始</h2>
+
+<!-- 步骤1：KP职责 圆角卡片 -->
+<div style="background: #141414; border: 2px solid #c0392b; border-radius: 16px; padding: 16px 20px; margin: 16px 0; transition: all 0.2s;">
+  <div style="font-weight: bold; color: #e63946; margin-bottom: 8px;">① KP职责</div>
+  
+  <div style="color: #e0e0e0;">负责角色选择、角色反馈、事件反馈、末日商店等一系列文本产出。你也可以偷懒，毕竟本守则的目的是保证游戏体验而非硬性要求。</div>
+</div>
+
+<!-- 指引快速参照表（保持原样） -->
+<blockquote>
+  <p><strong>指引快速参照表</strong></p>
+  <p>三要素：时间、地点、末日类型</p>
+  <p>① 模糊笼统 — 满足0项 → 额外信仰力 +0</p>
+  <p>② 三要素满足两点 → 额外信仰力 +20~100</p>
+  <p>③ 三要素全部具备 → 额外信仰力 +200~400</p>
+</blockquote>
+
+<blockquote>
+  <p>玩家只需开局选择角色，游戏流程中选择末日，指引信徒，记录信仰点数，角色状态。如果是新手，个人建议查阅快速开局包中迅速开一把。</p>
+</blockquote>
+
+<!-- 步骤2：选择类型 圆角卡片 -->
+<div style="background: #141414; border: 2px solid #c0392b; border-radius: 16px; padding: 16px 20px; margin: 16px 0;">
+  <div style="font-weight: bold; color: #e63946; margin-bottom: 8px;">② 选择类型</div>
+  <div style="color: #e0e0e0;">现代、中世纪或架空（由玩家投票决定）。</div>
+</div>
+
+<!-- 步骤3：角色创建 圆角卡片 -->
+<div style="background: #141414; border: 2px solid #c0392b; border-radius: 16px; padding: 16px 20px; margin: 16px 0;">
+  <div style="font-weight: bold; color: #e63946; margin-bottom: 8px;">③ 角色创建</div>
+  <div style="color: #e0e0e0;">KP为每位玩家提供3选1角色，按五步法（职业→性格→特质→年龄→性别）创建。
+  <br>如上手太难，可参考KP统一参照里的角色参照。
+  <br>（若想偷懒，一名玩家选择一位角色后，其余未被选择的角色可直接发给另一个玩家。）</div>
+</div>
+
+<!-- 步骤4：开始游戏（包含游戏流程循环）圆角卡片 -->
+<div style="background: #141414; border: 2px solid #c0392b; border-radius: 16px; padding: 16px 20px; margin: 16px 0;">
+  <div style="font-weight: bold; color: #e63946; margin-bottom: 8px;">④ 开始游戏</div>
+  <div style="color: #e0e0e0;">
+    游戏流程循环：<br>
+    <span style="display: inline-block; background: #2a2a2a; border-radius: 20px; padding: 4px 12px; margin: 4px 4px 0 0;">1 角色导入</span>
+    <span style="display: inline-block; background: #2a2a2a; border-radius: 20px; padding: 4px 12px; margin: 4px 4px 0 0;">2 投放末日（私聊）</span>
+    <span style="display: inline-block; background: #2a2a2a; border-radius: 20px; padding: 4px 12px; margin: 4px 4px 0 0;">3 玩家指引</span>
+    <span style="display: inline-block; background: #2a2a2a; border-radius: 20px; padding: 4px 12px; margin: 4px 4px 0 0;">4 事件播报</span>
+    <span style="display: inline-block; background: #2a2a2a; border-radius: 20px; padding: 4px 12px; margin: 4px 4px 0 0;">5 角色反馈</span><br>
+    一回合即为结束，之后可循环（第1回合后第1步可省略）。
+  </div>
+</div>
+
+<!-- 反馈句式 圆角卡片 -->
+<div style="background: #141414; border: 2px solid #c0392b; border-radius: 16px; padding: 16px 20px; margin: 16px 0;">
+  <div style="font-weight: bold; color: #e63946; margin-bottom: 8px;"> 反馈句式参考</div>
+  <div style="color: #e0e0e0;">
+    "你的指引被信徒【接受/拒绝/部分拒绝】<br>因为【信徒特质】你获得了【X】点信仰力"。<br>
+    当玩家选择完角色后，应当先产出角色导入，随后再依次发送玩家可选的末日商店灾难，让玩家下达指引，最后是事件和信徒状态反馈。
+  </div>
+</div>
+
+<!-- 步骤6：特别注意 圆角卡片 -->
+<div style="background: #141414; border: 2px solid #c0392b; border-radius: 16px; padding: 16px 20px; margin: 16px 0;">
+  <div style="font-weight: bold; color: #e63946; margin-bottom: 8px;">⑥ 特别注意</div>
+  <div style="color: #e0e0e0;">【指引】、【随机性】、【信徒的自主变量】为本团的核心。每次产出末日商店的随机性、玩家指引的准确性、信徒是否按照指引行动的随机性，不仅增加了趣味性，也增加了博弈性。</div>
+</div>
+<h2 id="caijue">给KP的判定参照</h2>
+<p>当你拿不准一个行为的成败时，除了投骰子之外，还可以选择参考以下标准判定</p>
+
+<div style="display: flex; flex-direction: column; gap: 16px; margin: 20px 0;">
+  <!-- 情境是否有利 -->
+  <div style="background: #141414; border: 2px solid #c0392b; border-radius: 16px; padding: 16px;">
+    <div style="font-weight: bold; color: #e63946; margin-bottom: 8px;">情境是否有利？</div>
+    <div style="color: #e0e0e0;">医生在诊所治病，成功理所应当。医生在枪林弹雨中做手术，失败也情有可原。</div>
+  </div>
+  <!-- 角色是否擅长 -->
+  <div style="background: #141414; border: 2px solid #c0392b; border-radius: 16px; padding: 16px;">
+    <div style="font-weight: bold; color: #e63946; margin-bottom: 8px;">角色是否擅长？</div>
+    <div style="color: #e0e0e0;">专业的事让专业的人做。商人写诗和吟游诗人写诗，难度天差地别。</div>
+  </div>
+  <!-- 叙事是否需要这个冲突 -->
+  <div style="background: #141414; border: 2px solid #c0392b; border-radius: 16px; padding: 16px;">
+    <div style="font-weight: bold; color: #e63946; margin-bottom: 8px;">叙事是否需要这个冲突？</div>
+    <div style="color: #e0e0e0;">一次意外的失败有时能带来最精彩的转折。如果这次失败能让剧情更有趣，就大胆判它失败。反之亦然。</div>
+  </div>
+</div>
+<!-- 极简角色数值（纯文本，示例用透明表格） -->
+<h2 id="shuzhi">极简角色数值</h2>
+<p>为了记录信徒在末日中的状态变化，建议为每个角色记录以下三项核心数值。<strong>此系统为可选</strong>，不记录也完全不影响游戏。</p>
+
+<div style="margin: 20px 0;">
+  <div style="margin-bottom: 20px; padding-bottom: 16px; border-bottom: 1px solid #c0392b;">
+    <div style="font-size: 1.2em; font-weight: bold; color: #e63946; margin-bottom: 8px;">生命值</div>
+    <div style="color: #e0e0e0; line-height: 1.5;">基础值 <strong>默认100 健康</strong>。受到严重伤害、瘟疫、饥荒等事件时减少，降至0则角色死亡。每回合末可恢复 1d10（若条件允许）。</div>
+  </div>
+  <div style="margin-bottom: 20px; padding-bottom: 16px; border-bottom: 1px solid #c0392b;">
+    <div style="font-size: 1.2em; font-weight: bold; color: #e63946; margin-bottom: 8px;">状态</div>
+    <div style="color: #e0e0e0; line-height: 1.5;">健康 / 轻伤 / 重伤 / 濒死。<br>影响KP判定时的难度。例如：重伤状态下战斗自动失败。</div>
+  </div>
+  <div style="margin-bottom: 8px;">
+    <div style="font-size: 1.2em; font-weight: bold; color: #e63946; margin-bottom: 8px;">擅长领域</div>
+    <div style="color: #e0e0e0; line-height: 1.5;">每个角色拥有1~2个擅长项（如医疗、战斗、社交、潜行、学识）。<br>在相关检定中获得优势，每项专长增加40%成功率。</div>
+  </div>
+</div>
+
+<!-- 示例：透明无边框表格 -->
+<div style="margin: 20px 0;">
+  <div style="font-weight: bold; color: #e63946; margin-bottom: 8px;">示例</div>
+  <table style="width: 100%; border-collapse: collapse; background: transparent;">
+    <tbody>
+      <tr><td style="padding: 4px 0; border: none; width: 30%;"><strong>秦川南</strong>（吟游诗人）</td><td style="padding: 4px 0; border: none;">擅长社交、潜行</td></tr>
+      <tr><td style="padding: 4px 0; border: none;"><strong>秦羽</strong>（军医）</td><td style="padding: 4px 0; border: none;">擅长医疗、学识</td></tr>
+    </tbody>
+  </table>
+  <p style="margin: 12px 0 0 0; color: #d0d0d0;">生命值变动由KP根据事件描述自由裁定，无需精确计算。<br>例如：“你被暴民打了一棍” 状态→轻伤。</p>
+</div>
+
+<hr>
+<h2 id="jichu">基础规则</h2>
+
+<table>
+  <thead><tr><th>名称</th><th>数值</th></tr></thead>
+  <tbody>
+    <tr><td>初始信仰力</td><td>200点</td></tr>
+    <tr><td>每回合固定获得</td><td>100点</td></tr>
+    <tr><td>随机事件获得</td><td>20~100
+    ，200~400点</td></tr>
+    <tr><td>信仰上限</td><td>5000点</td></tr>
+  </tbody>
+</table>
+<div class="rule-card">
+  <div class="rule-num">①</div>
+  <div class="rule-content">
+    <strong>初始回合信仰力为200点</strong>，用于在私聊中投放末日，后续每回合固定100点。<br>（此条可被DLC覆盖）。
+  </div>
+  <div class="rule-diamond">◈</div>
+</div>
+  <div class="rule-card">
+  <div class="rule-num">②</div>
+  <div class="rule-content">
+    一回合为6个月时间，每个月都会产出事件。角色在此期间会自动成长，发生变化，获得加强。角色所经历的事件以及事件将会影响额外信仰力。
+  </div>
+  <div class="rule-diamond">◈</div>
+</div>
+<div class="rule-card">
+  <div class="rule-num">③</div>
+  <div class="rule-content">
+    神权陨落与王权陨落事件，固定提供 <strong>300点</strong> 信仰力。至于何时出现，由KP自行判定。
+  </div>
+  <div class="rule-diamond">◈</div>
+</div>
+    <div class="rule-card">
+  <div class="rule-num">④</div>
+  <div class="rule-content">
+    末日商店中的灾难应当保持每回合随机刷新，（瞎编）给玩家刷新末日商店后，末日应当包含部分效果介绍。
+  </div>
+  <div class="rule-diamond">◈</div>
+</div>
+
+<!-- 示例引用块保持原样 -->
+<blockquote>
+  <p><strong>例如：</strong></p>
+  <p>- 〖星陨〗：陨石坠落近海，引发海啸与民众恐慌 200点</p>
+  <p>- 〖革命前夕〗：布萨公国展开了新一轮的九子夺嫡大征税收，这令民众苦不堪言 100点</p>
+  <p>- 〖海妖登陆〗：沉睡千年的海妖即将苏醒 200点</p>
+  <p>- 〖神迹降临〗：观似星辰，而你展示神迹 400点</p>
+  <p>- 〖黑死病〗：有不少人在咳血坏死 100点</p>
+</blockquote>
+
+<!-- 后续规则继续用卡片列表（标准化版） -->
+<div class="rule-card">
+  <div class="rule-num">⑤</div>
+  <div class="rule-content">
+    地位越高/越理性的角色（除宗教或中世纪），例如政府官员、现代警察、律师，等职业反而越接近于无神论者。因此，比起所谓神的指引，他们更相信自己的判断。
+  </div>
+  <div class="rule-diamond">◈</div>
+</div>
+
+<div class="rule-card">
+  <div class="rule-num">⑥</div>
+  <div class="rule-content">
+    若两位玩家在同一回合死亡，则根据所处情况与地形判定。
+  </div>
+  <div class="rule-diamond">◈</div>
+</div>
+
+<div class="rule-card">
+  <div class="rule-num">⑦</div>
+  <div class="rule-content">
+    末日等级将根据玩家所点等级连续升级，而灾难也会自行演化和突变。<br>
+    例如：玩家A点了一级战乱，那么玩家B的商店页面战乱就应当是二级，玩家B再次释放战乱之后，将为三级战乱。
+  </div>
+  <div class="rule-diamond">◈</div>
+</div>
+
+<div class="rule-card">
+  <div class="rule-num">⑧</div>
+  <div class="rule-content">
+    五回合后，每个回合将固定产出两个末日事件，以加快游戏进程，避免游戏时间过长。
+  </div>
+  <div class="rule-diamond">◈</div>
+</div>
+
+<div class="rule-card">
+  <div class="rule-num">⑨</div>
+  <div class="rule-content">
+    神明下达指引时（预判他人的末日事件），预判成功后，口语化表达或模糊将会影响信仰力，KP需通过私聊或者角色反馈告知。
+  </div>
+  <div class="rule-diamond">◈</div>
+</div>
+
+<div class="rule-card">
+  <div class="rule-num">⑩</div>
+  <div class="rule-content">
+    指引不允许太过复杂，只能讲述一件事或一个地点，若玩家表述太过模糊，可要求对方丰富，或告知对方，并表明后果自负。
+  </div>
+  <div class="rule-diamond">◈</div>
+</div>
+
+<div class="rule-card">
+  <div class="rule-num">⑪</div>
+  <div class="rule-content">
+    除架空外，应当存在官方势力，维护秩序，KP可自行决定官方势力的具体强度。
+  </div>
+  <div class="rule-diamond">◈</div>
+</div>
+
+<div class="rule-card">
+  <div class="rule-num">⑫</div>
+  <div class="rule-content">
+    KP需在一回合内，对玩家所投放的末日形成相关反馈，而末日会衍生连锁事件，当然，也可自行诞生额外事件（为减轻KP负担，是否自行诞生额外事件由KP决定）。
+  </div>
+  <div class="rule-diamond">◈</div>
+</div>
+
+<div class="rule-card">
+  <div class="rule-num">⑬</div>
+  <div class="rule-content">
+    架空类型主要是为自备观或有点子的KP服务，具体的情况、职业、灾难、生物形态全权由KP自由发挥，也可以选择参照其他世界观和生物形态。
+  </div>
+  <div class="rule-diamond">◈</div>
+</div>
+
+<div class="rule-card">
+  <div class="rule-num">⑭</div>
+  <div class="rule-content">
+    玩家每两回合可选择锁定一项商店内容，若玩家锁定，KP在下回合商店刷新时，应当保留。（开启相关规则后赐福商店同理，详见<a href="#" onclick="switchSection('shenzhan-kp')">神战DLC</a>）
+  </div>
+  <div class="rule-diamond">◈</div>
+</div>
+
+<div class="rule-card">
+  <div class="rule-num">⑮</div>
+  <div class="rule-content">
+    末日最多持续3回合，除非自行演化的更加严重，自身突变（思想变迁变革命）玩家加强。
+  </div>
+  <div class="rule-diamond">◈</div>
+<h2 id="morichanchu">末日产出</h2>
+<h3>①黑死病·一级</h3>
+<p><strong>类型</strong>：长期 · 瘟疫类 | <strong>消耗</strong>：100点</p>
+<p>简介：城市里满是马粪和走在街上的贵族，没有人在乎垃圾，马车奔腾着，街道上的粪便飞溅，老鼠四处流窜，整个城市都臭气熏天，如果这里爆发瘟疫……</p>
+
+<h3>②洪灾·一级</h3>
+<p><strong>类型</strong>：长期 · 天灾类 | <strong>消耗</strong>：100点</p>
+<p>简介：此时正是丰收季，大家都在割麦子，但你可以连下三天大雨，让他们全落在地里，顺便让下游的村镇被冲一波，岂不快哉？</p>
+
+<h3>③海盗·一级</h3>
+<p><strong>类型</strong>：长期 · 人祸类 | <strong>消耗</strong>：100点</p>
+<p>简介：春季的到来让商船们流通的更快，各地的人们都在举办活动，载歌载舞当然，这也是海盗发财的好时机，那么多船，随便打劫哪一艘都能赚的盆满钵满</p>
+
+<h3>④革命·一级</h3>
+<p><strong>类型</strong>：长期 · 人祸类 | <strong>消耗</strong>：100点</p>
+<p>简介：高税收，贪腐，连年歉收，已经让这个国家的人容忍到了极点商人没钱赚，农民吃不饱，人们开始集结，开始讨论贵族过得如何让我们来推翻这一切吧，一个年轻人如此说着</p>
+
+<h3>⑤猎巫·一级</h3>
+<p><strong>类型</strong>：长期 · 人祸类 | <strong>消耗</strong>：100点</p>
+<p>简介：最近这几年人们过得一直都不太平，民怨四起，而教会需要理由刚好，有一位教徒在私底下举办仪式时被人举报、抓获，教会当场将其处死，将其定义为邪恶的巫师，人们终于有发泄口了……</p>
+
+<!-- 长期灾难等级表 -->
+<h2 id="player-changqi">四·长期灾难等级表</h2>
+<table style="width: 100%; border-collapse: collapse; margin: 15px 0;">
+  <thead>
+    <tr>
+      <th style="border: 1px solid #c0392b; padding: 8px; background: #2a2a2a; color: #e63946;">等级</th>
+      <th style="border: 1px solid #c0392b; padding: 8px; background: #2a2a2a; color: #e63946;">消耗</th>
+      <th style="border: 1px solid #c0392b; padding: 8px; background: #2a2a2a; color: #e63946;">描述</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr><td style="border: 1px solid #c0392b; padding: 8px;">一级</td><td style="border: 1px solid #c0392b; padding: 8px;">100点</td><td style="border: 1px solid #c0392b; padding: 8px;">轻微灾难，基本不影响正常生活</td></tr>
+    <tr><td style="border: 1px solid #c0392b; padding: 8px;">二级</td><td style="border: 1px solid #c0392b; padding: 8px;">200点</td><td style="border: 1px solid #c0392b; padding: 8px;">常规灾难，引起政府注意</td></tr>
+    <tr><td style="border: 1px solid #c0392b; padding: 8px;">三级</td><td style="border: 1px solid #c0392b; padding: 8px;">400点</td><td style="border: 1px solid #c0392b; padding: 8px;">中型灾难，大批人口死亡</td></tr>
+    <tr><td style="border: 1px solid #c0392b; padding: 8px;">四级</td><td style="border: 1px solid #c0392b; padding: 8px;">800点</td><td style="border: 1px solid #c0392b; padding: 8px;">特大灾难，摧毁一个国家</td></tr>
+    <tr><td style="border: 1px solid #c0392b; padding: 8px;">五级</td><td style="border: 1px solid #c0392b; padding: 8px;">1400点</td><td style="border: 1px solid #c0392b; padding: 8px;">灭世级灾难，秩序崩塌</td></tr>
+  </tbody>
+</table>
+<!-- 短期灾难等级表 -->
+<h2 id="player-duanqi">三·短期灾难等级表</h2>
+<table style="width: 100%; border-collapse: collapse; margin: 15px 0;">
+  <thead>
+    <tr>
+      <th style="border: 1px solid #c0392b; padding: 8px; background: #2a2a2a; color: #e63946;">等级</th>
+      <th style="border: 1px solid #c0392b; padding: 8px; background: #2a2a2a; color: #e63946;">消耗</th>
+      <th style="border: 1px solid #c0392b; padding: 8px; background: #2a2a2a; color: #e63946;">影响范围</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr><td style="border: 1px solid #c0392b; padding: 8px;">一级</td><td style="border: 1px solid #c0392b; padding: 8px;">100点</td><td style="border: 1px solid #c0392b; padding: 8px;">镇级灾难</td></tr>
+    <tr><td style="border: 1px solid #c0392b; padding: 8px;">二级</td><td style="border: 1px solid #c0392b; padding: 8px;">200点</td><td style="border: 1px solid #c0392b; padding: 8px;">市级灾难</td></tr>
+    <tr><td style="border: 1px solid #c0392b; padding: 8px;">三级</td><td style="border: 1px solid #c0392b; padding: 8px;">400点</td><td style="border: 1px solid #c0392b; padding: 8px;">省级灾难</td></tr>
+    <tr><td style="border: 1px solid #c0392b; padding: 8px;">四级</td><td style="border: 1px solid #c0392b; padding: 8px;">800点</td><td style="border: 1px solid #c0392b; padding: 8px;">国家级灾难</td></tr>
+    <tr><td style="border: 1px solid #c0392b; padding: 8px;">五级</td><td style="border: 1px solid #c0392b; padding: 8px;">1400点</td><td style="border: 1px solid #c0392b; padding: 8px;">世界级灾难</td></tr>
+  </tbody>
+</table>
+<h2 id="bobao">世界播报参照</h2>
+<h3>现代</h3>
+<blockquote>
+  <p><strong>〖6月·星辰陨落〗</strong>欢迎诸位收看光辉新闻台晚间报道。对于近日本国近海内所坠落的天外陨石，GRO航天局已正式收录。<br>但GRO表示，陨石坠落轨迹并不符合偶然现象和科学规律，疑似人为操纵的定向投送，目前正在进一步检测其样本成分。</p>
+  <p><strong>〖7月·暴动〗</strong>欢迎诸位收看光辉新闻国际台早间报道。<br>在昨日晚间，一群暴民冲向了光辉科技公司的集团大楼，抢夺其内部科研资料，目前已被当地武装部门镇压。<br>光辉科技集团承诺，对于在本次事件中，受伤的安保人员统一为240万的赔偿，具体案件还在进一步受理中</p>
+</blockquote>
+
+<h3>中世纪</h3>
+<blockquote>
+  <p><strong>〖6月·帝崩〗</strong>前几日坊间传闻，萨勒帝国的帝皇，被人发现死在寝宫中。<br>时至今日，皇室已正式承认此消息准确性，并举行国丧，但民众对此表示麻木，毕竟国家情况已经烂透了</p>
+  <p><strong>〖7月·革命〗</strong>随着老帝皇死亡，政府的收税只多不少，什么国丧税、缅怀税，压得人喘不过气，民怨四起。<br>而在新皇登基当天，帝国边境的克拉萨斯城内，随着“让这些贵族滚下来，把我们应该有的还给我们”的口号喊出，一群暴民朝着当地城主府冲去</p>
+</blockquote>
+
+<h3>架空</h3>
+<blockquote>
+  <p><strong>〖6月·忌日〗</strong>巍峨的堡垒竖立在太空，自从人类迈向星河起，地球就作为主要据点被裹成了堡垒，戒备森严，几乎是牢不可破的，最起码曾经如此。<br>又是一年地球日，作为人类正式走向星际的日子，人们欢庆着，享受着来之不易的假期。<br>太空上本应如此，但……今日注定是地球的忌日。<br>人类引以为傲的堡垒直接被行星打击系统轰穿，能量余波直接将周围的战舰一并摧毁</p>
+  <p><strong>〖7月·太阳的熄灭〗</strong>自太空堡垒失守后，地球本土就陷入了一片荒漠。先是巨量的辐射直接照射在地表，引发生物突变，直至大地被炙烤成干尸。<br>人们被迫躲入了地下，最起码他们那不可见的敌人还没有进行下一步的行动，但愿吧。</p>
+</blockquote>
+<h2 id="weidu">维度参照表</h2>
+<h3>现代</h3>
+<ul>
+  <li><strong>政府控制力·高</strong>：警察/军队/法律体系完整，热武器基本可以屠杀普通民众</li>
+  <li><strong>宗教影响力·低</strong>：科技生产力发达，思想变革，大家都坚信唯物主义论了</li>
+  <li><strong>消息流通·极快</strong>：互联网、新闻、网络电台，基本不会导致消息落后</li>
+  <li><strong>异常事件各界反应</strong>：科学解释优先</li>
+  <li><strong>军事水平</strong>：一体信息化战术</li>
+</ul>
+
+<h3>中世纪</h3>
+<ul>
+  <li><strong>政府控制力·中</strong>：王权/领主/教会分权，君权神授，天命在我，分封制</li>
+  <li><strong>教会影响·高</strong>：教会/神权统治，所谓君权神授，教皇唯一，你是异端，上火刑架烧死他</li>
+  <li><strong>消息流通·慢</strong>：信件/公告/吟游诗人</li>
+  <li><strong>异常事件反应</strong>：神迹/天罚</li>
+  <li><strong>军事水平</strong>：冷兵器为主</li>
+</ul>
+
+<h2 id="shili">势力数据参考</h2>
+<table>
+  <tr><th style="width:25%;">势力名称</th><td>光辉科技</td></tr>
+  <tr><th>军队数量</th><td>16,000</td></tr>
+  <tr><th>影响力</th><td>高</td></tr>
+  <tr><th>财力</th><td>富可敌国</td></tr>
+</table>
+<blockquote>
+  <p><strong>附属组织：</strong>德尔塔生物科技 · 月芽世茂</p>
+</blockquote>
+<hr style="border: none; border-top: 1px dashed #ddd; margin: 16px 0;">
+<p style="color: #888; font-size: 0.9em;"><strong>世界观规模参考：</strong></p>
+<table>
+  <tr><th style="width:25%;">名称</th><td>天穹</td></tr>
+  <tr><th>存活人数</th><td>100亿</td></tr>
+  <tr><th>存在势力</th><td>四大种族</td></tr>
+  <tr><th>文明秩序</th><td>高</td></tr>
+  <tr><th>科技类型</th><td>魔导科技</td></tr>
+  <tr><th>发展程度</th><td>已迈入星辰时代</td></tr>
+</table>
+<h2 id="zhiye">职业裁决参照表</h2>
+<p>此表用于KP快速判定信徒在特定场景下的行为倾向与指引接受度，具体裁决仍需结合角色性格与特质。</p>
+<blockquote>
+  <p><strong>KP注意：</strong>现代背景下人物对神学的接受度普遍偏低，中世纪则普遍偏高，因为宗教权重比的不同，人们所接受的文化灌输也不相同。</p>
+</blockquote>
+
+<!-- 职业卡片列表 -->
+<div style="display: flex; flex-wrap: wrap; gap: 20px; margin: 20px 0;">
+  <!-- 军人 -->
+  <div style="flex: 1 1 280px; background: #141414; border: 2px solid #c0392b; border-radius: 16px; padding: 16px;">
+    <div style="font-size: 1.2em; font-weight: bold; color: #e63946; border-bottom: 1px dashed #c0392b; margin-bottom: 12px; padding-bottom: 6px;">军人</div>
+    <div><span style="color: #e63946;">强项：</span>战斗、纪律行动、危机秩序维持</div>
+    <div style="margin-top: 8px;"><span style="color: #e63946;">阻抗：</span>中高（现代职业道德盖过神谕，中世纪偏高）</div>
+    <div style="margin-top: 8px;"><span style="color: #e63946;">赐福：</span>力量、体质</div>
+  </div>
+  <!-- 医生 -->
+  <div style="flex: 1 1 280px; background: #141414; border: 2px solid #c0392b; border-radius: 16px; padding: 16px;">
+    <div style="font-size: 1.2em; font-weight: bold; color: #e63946; border-bottom: 1px dashed #c0392b; margin-bottom: 12px; padding-bottom: 6px;">医生</div>
+    <div><span style="color: #e63946;">强项：</span>医疗、防疫、获取信任</div>
+    <div style="margin-top: 8px;"><span style="color: #e63946;">阻抗：</span>中（现代不信神学，使命感会违抗神谕）</div>
+    <div style="margin-top: 8px;"><span style="color: #e63946;">赐福：</span>智力、感知</div>
+  </div>
+  <!-- 记者 -->
+  <div style="flex: 1 1 280px; background: #141414; border: 2px solid #c0392b; border-radius: 16px; padding: 16px;">
+    <div style="font-size: 1.2em; font-weight: bold; color: #e63946; border-bottom: 1px dashed #c0392b; margin-bottom: 12px; padding-bottom: 6px;">记者</div>
+    <div><span style="color: #e63946;">强项：</span>信息获取、跨势力联络、公众舆论</div>
+    <div style="margin-top: 8px;"><span style="color: #e63946;">阻抗：</span>中（受教育程度高，但接受度高于其他现代职业）</div>
+    <div style="margin-top: 8px;"><span style="color: #e63946;">赐福：</span>魅力、智力</div>
+  </div>
+  <!-- 商人 -->
+  <div style="flex: 1 1 280px; background: #141414; border: 2px solid #c0392b; border-radius: 16px; padding: 16px;">
+    <div style="font-size: 1.2em; font-weight: bold; color: #e63946; border-bottom: 1px dashed #c0392b; margin-bottom: 12px; padding-bottom: 6px;">商人</div>
+    <div><span style="color: #e63946;">强项：</span>资源交换、谈判、建立关系网</div>
+    <div style="margin-top: 8px;"><span style="color: #e63946;">阻抗：</span>中（唯利是图，有利则从）</div>
+    <div style="margin-top: 8px;"><span style="color: #e63946;">赐福：</span>魅力、幸运</div>
+  </div>
+  <!-- 警察 -->
+  <div style="flex: 1 1 280px; background: #141414; border: 2px solid #c0392b; border-radius: 16px; padding: 16px;">
+    <div style="font-size: 1.2em; font-weight: bold; color: #e63946; border-bottom: 1px dashed #c0392b; margin-bottom: 12px; padding-bottom: 6px;">警察</div>
+    <div><span style="color: #e63946;">强项：</span>秩序维护、调查、武装执法</div>
+    <div style="margin-top: 8px;"><span style="color: #e63946;">阻抗：</span>高（九年义务教育，科学思维）</div>
+    <div style="margin-top: 8px;"><span style="color: #e63946;">赐福：</span>力量、体质</div>
+  </div>
+  <!-- 消防员 -->
+  <div style="flex: 1 1 280px; background: #141414; border: 2px solid #c0392b; border-radius: 16px; padding: 16px;">
+    <div style="font-size: 1.2em; font-weight: bold; color: #e63946; border-bottom: 1px dashed #c0392b; margin-bottom: 12px; padding-bottom: 6px;">消防员</div>
+    <div><span style="color: #e63946;">强项：</span>救援、灭火、高危环境行动</div>
+    <div style="margin-top: 8px;"><span style="color: #e63946;">阻抗：</span>高（破除迷信，不信神学）</div>
+    <div style="margin-top: 8px;"><span style="color: #e63946;">赐福：</span>体质、力量</div>
+  </div>
+  <!-- 雇佣兵 -->
+  <div style="flex: 1 1 280px; background: #141414; border: 2px solid #c0392b; border-radius: 16px; padding: 16px;">
+    <div style="font-size: 1.2em; font-weight: bold; color: #e63946; border-bottom: 1px dashed #c0392b; margin-bottom: 12px; padding-bottom: 6px;">雇佣兵</div>
+    <div><span style="color: #e63946;">强项：</span>战斗、生存、高风险任务</div>
+    <div style="margin-top: 8px;"><span style="color: #e63946;">阻抗：</span>中（刀尖舔血，自我判断强）</div>
+    <div style="margin-top: 8px;"><span style="color: #e63946;">赐福：</span>力量、敏捷</div>
+  </div>
+  <!-- 骑士 -->
+  <div style="flex: 1 1 280px; background: #141414; border: 2px solid #c0392b; border-radius: 16px; padding: 16px;">
+    <div style="font-size: 1.2em; font-weight: bold; color: #e63946; border-bottom: 1px dashed #c0392b; margin-bottom: 12px; padding-bottom: 6px;">骑士</div>
+    <div><span style="color: #e63946;">强项：</span>战斗、荣誉场合、社交</div>
+    <div style="margin-top: 8px;"><span style="color: #e63946;">阻抗：</span>中（荣誉感强可能抗拒；宗教骑士接受度高）</div>
+    <div style="margin-top: 8px;"><span style="color: #e63946;">赐福：</span>力量、魅力</div>
+  </div>
+  <!-- 修女 -->
+  <div style="flex: 1 1 280px; background: #141414; border: 2px solid #c0392b; border-radius: 16px; padding: 16px;">
+    <div style="font-size: 1.2em; font-weight: bold; color: #e63946; border-bottom: 1px dashed #c0392b; margin-bottom: 12px; padding-bottom: 6px;">修女</div>
+    <div><span style="color: #e63946;">强项：</span>医疗辅助、精神安抚、社群关系</div>
+    <div style="margin-top: 8px;"><span style="color: #e63946;">阻抗：</span>低（自小宗教洗脑，天生敬仰）</div>
+    <div style="margin-top: 8px;"><span style="color: #e63946;">赐福：</span>感知、魅力</div>
+  </div>
+  <!-- 吟游诗人 -->
+  <div style="flex: 1 1 280px; background: #141414; border: 2px solid #c0392b; border-radius: 16px; padding: 16px;">
+    <div style="font-size: 1.2em; font-weight: bold; color: #e63946; border-bottom: 1px dashed #c0392b; margin-bottom: 12px; padding-bottom: 6px;">吟游诗人</div>
+    <div><span style="color: #e63946;">强项：</span>信息传播、社交、文化渗透</div>
+    <div style="margin-top: 8px;"><span style="color: #e63946;">阻抗：</span>低（游历四方，接受度比常人高）</div>
+    <div style="margin-top: 8px;"><span style="color: #e63946;">赐福：</span>魅力、敏捷</div>
+  </div>
+  <!-- 瘟疫医生 -->
+  <div style="flex: 1 1 280px; background: #141414; border: 2px solid #c0392b; border-radius: 16px; padding: 16px;">
+    <div style="font-size: 1.2em; font-weight: bold; color: #e63946; border-bottom: 1px dashed #c0392b; margin-bottom: 12px; padding-bottom: 6px;">瘟疫医生</div>
+    <div><span style="color: #e63946;">强项：</span>防疫、病理研究、恐惧环境行动</div>
+    <div style="margin-top: 8px;"><span style="color: #e63946;">阻抗：</span>中（中世纪医生，受宗教影响有一定接受度）</div>
+    <div style="margin-top: 8px;"><span style="color: #e63946;">赐福：</span>智力、感知</div>
+  </div>
+  <!-- 盗贼/刺客 -->
+  <div style="flex: 1 1 280px; background: #141414; border: 2px solid #c0392b; border-radius: 16px; padding: 16px;">
+    <div style="font-size: 1.2em; font-weight: bold; color: #e63946; border-bottom: 1px dashed #c0392b; margin-bottom: 12px; padding-bottom: 6px;">盗贼/刺客</div>
+    <div><span style="color: #e63946;">强项：</span>潜行、情报、暗杀</div>
+    <div style="margin-top: 8px;"><span style="color: #e63946;">阻抗：</span>中（刀尖舔血，不靠谱的不从）</div>
+    <div style="margin-top: 8px;"><span style="color: #e63946;">赐福：</span>敏捷、力量</div>
+  </div>
+  <!-- 学者/科学家 -->
+  <div style="flex: 1 1 280px; background: #141414; border: 2px solid #c0392b; border-radius: 16px; padding: 16px;">
+    <div style="font-size: 1.2em; font-weight: bold; color: #e63946; border-bottom: 1px dashed #c0392b; margin-bottom: 12px; padding-bottom: 6px;">学者/科学家</div>
+    <div><span style="color: #e63946;">强项：</span>知识研究、技术破解、理性分析</div>
+    <div style="margin-top: 8px;"><span style="color: #e63946;">阻抗：</span>高（高学识，唯物主义，越了解现实越不信）</div>
+    <div style="margin-top: 8px;"><span style="color: #e63946;">赐福：</span>智力、感知</div>
+  </div>
+  <!-- 官员/贵族 -->
+  <div style="flex: 1 1 280px; background: #141414; border: 2px solid #c0392b; border-radius: 16px; padding: 16px;">
+    <div style="font-size: 1.2em; font-weight: bold; color: #e63946; border-bottom: 1px dashed #c0392b; margin-bottom: 12px; padding-bottom: 6px;">官员/贵族</div>
+    <div><span style="color: #e63946;">强项：</span>政治运作、资源调动、人脉影响</div>
+    <div style="margin-top: 8px;"><span style="color: #e63946;">阻抗：</span>高（精英教育，不信空泛神谕）</div>
+    <div style="margin-top: 8px;"><span style="color: #e63946;">赐福：</span>魅力、智力</div>
+  </div>
+  <!-- 农民/劳动者 -->
+  <div style="flex: 1 1 280px; background: #141414; border: 2px solid #c0392b; border-radius: 16px; padding: 16px;">
+    <div style="font-size: 1.2em; font-weight: bold; color: #e63946; border-bottom: 1px dashed #c0392b; margin-bottom: 12px; padding-bottom: 6px;">农民/劳动者</div>
+    <div><span style="color: #e63946;">强项：</span>基础生产、社群互助、耐力行动</div>
+    <div style="margin-top: 8px;"><span style="color: #e63946;">阻抗：</span>低（只想活着，谁让活不重要）</div>
+    <div style="margin-top: 8px;"><span style="color: #e63946;">赐福：</span>体质、力量</div>
+  </div>
+</div>
+
+<blockquote>
+  <p><strong>使用说明：</strong></p>
+  <p>- <strong>强项场景</strong>：该职业的信徒在哪些情境下自动获得更高的成功率，KP可降低判定难度或直接描述其高效行动。</p>
+  <p>- <strong>指引阻抗</strong>：该职业对神明指引的天然抵触程度。"低"意味着更易接受指引，"高"意味着更倾向于依据职业判断或理性分析自行判断。</p>
+  <p>- <strong>赐福倾向</strong>：神战DLC中，该职业的信徒被赐福时更适合的增幅方向（仅供参考）。</p>
+  <p>- 每项判定均需结合角色的【性格】与【特质】综合裁决，此表仅提供职业维度的基准锚定。</p>
+</blockquote>
+</section>   <!-- 关闭 kp-basic -->
+<section id="player-basic">
+  <div class="kp-card">
+    <h2>玩家基础守则</h2>
+    <div style="display: flex; flex-direction: column; gap: 16px; margin: 20px 0;">
+      <p><strong>介绍：</strong>此为基础玩家的规则内容，推荐完整阅读。扩展请参阅DLC相关内容。</p>
+      <div class="player-directory">
+  <!-- 玩家基础规则 · 椭圆菱形目录卡片 -->
+<div class="kp-card elliptic-card" style="position: relative; border-radius: 60px; background: #141414; border: 2px solid #c0392b; border-left: none; border-right: none; padding: 20px 32px; margin: 24px 0; box-shadow: 0 4px 12px rgba(0,0,0,0.5); transition: all 0.2s ease;">
+  <div style="position: absolute; top: 12px; left: 20px; font-size: 1.6em; color: #e63946; opacity: 0.6;">♦</div>
+  <div style="position: absolute; bottom: 12px; right: 20px; font-size: 1.6em; color: #e63946; opacity: 0.6;">♦</div>
+  <div style="text-align: center; margin-bottom: 16px;">
+    <span style="display: inline-block; background: #2a0f0a; padding: 4px 20px; border-radius: 40px; color: #e63946; font-weight: bold; letter-spacing: 2px;">✦ 快速查阅目录 ✦</span>
+  </div>
+  <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 12px 20px;">
+    <a href="#player-core" style="background: #1e1e1e; border: 1px solid #c0392b; border-radius: 40px; padding: 6px 20px; color: #e63946; text-decoration: none; font-size: 0.95em; transition: all 0.2s;">◈ 核心条件</a>
+    <a href="#player-jichu" style="background: #1e1e1e; border: 1px solid #c0392b; border-radius: 40px; padding: 6px 20px; color: #e63946; text-decoration: none; font-size: 0.95em; transition: all 0.2s;">◈ 基础规则表</a>
+    <a href="#player-zhiyin" style="background: #1e1e1e; border: 1px solid #c0392b; border-radius: 40px; padding: 6px 20px; color: #e63946; text-decoration: none; font-size: 0.95em; transition: all 0.2s;">◈ 指引等级示例</a>
+    <a href="#player-duanqi" style="background: #1e1e1e; border: 1px solid #c0392b; border-radius: 40px; padding: 6px 20px; color: #e63946; text-decoration: none; font-size: 0.95em; transition: all 0.2s;">◈ 短期灾难表</a>
+    <a href="#player-changqi" style="background: #1e1e1e; border: 1px solid #c0392b; border-radius: 40px; padding: 6px 20px; color: #e63946; text-decoration: none; font-size: 0.95em; transition: all 0.2s;">◈ 长期灾难表</a>
+  </div>
+  <div style="text-align: center; margin-top: 14px; font-size: 0.75em; color: #aaa;">
+    <span>⬥ 点击任意条目快速跳转 ⬥</span>
+  </div>
+</div>
+<style>
+  .elliptic-card a:hover {
+    background: #c0392b !important;
+    color: #141414 !important;
+    transform: translateY(-2px);
+    box-shadow: 0 0 8px #e63946;
+  }
+  .elliptic-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 0 18px rgba(230, 57, 70, 0.5);
+  }
+</style>
+    <!-- 核心条件 -->
+    <h2>核心条件</h2>
+    <div style="display: flex; flex-direction: column; gap: 16px; margin: 20px 0;">
+      <div style="background: #141414; border: 2px solid #c0392b; border-radius: 16px; padding: 16px;">
+        <div style="font-weight: bold; color: #e63946; margin-bottom: 8px;">① 随机末日商店</div>
+        <div style="color: #e0e0e0;">为了增加乐趣，神明从不会定向投放末日。末日商店每回合给你随机几张灾难牌，你可能拿到瘟疫、陨石、战乱，或者更多奇妙的东西，一切全凭运气。</div>
+      </div>
+      <div style="background: #141414; border: 2px solid #c0392b; border-radius: 16px; padding: 16px;">
+        <div style="font-weight: bold; color: #e63946; margin-bottom: 8px;">② 信息隔离</div>
+        <div style="color: #e0e0e0;">伟大的神明不屑于偷窥对手。因此其他神明做了什么，您完全不能知晓，我想伟大的您也不会破坏游戏的公平性去偷窥对方。</div>
+      </div>
+      <div style="background: #141414; border: 2px solid #c0392b; border-radius: 16px; padding: 16px;">
+        <div style="font-weight: bold; color: #e63946; margin-bottom: 8px;">③ 随机与不确定</div>
+        <div style="color: #e0e0e0;">如果您觉得其他卑劣的神明会直接对您的信徒投放灾难，发动袭击，那还请提醒您那愚昧的信徒，否则他将会因此遭殃。至于会不会有一颗硕大的陨石落在您的信徒头上，这得看运气。</div>
+      </div>
+      <div style="background: #141414; border: 2px solid #c0392b; border-radius: 16px; padding: 16px;">
+        <div style="font-weight: bold; color: #e63946; margin-bottom: 8px;">④ 信徒的自主意志</div>
+        <div style="color: #e0e0e0;">渺小的虫子永远不会完整理解神的语意。您所选中的信徒都有自己的生活职业与理念，因此，他们或许并不会完全遵从神的旨意，甚至会忤逆神明。所以还请您下达指引时，尽量精确，贴合信徒性格。</div>
+      </div>
+      <div style="background: #141414; border: 2px solid #c0392b; border-radius: 16px; padding: 16px;">
+        <div style="font-weight: bold; color: #e63946; margin-bottom: 8px;">⑤ 活到最后的人赢</div>
+        <div style="color: #e0e0e0;">不管中间投了多少灾难、猜对了几次，最终只有一个标准：谁的信徒活到最后，谁就是赢家。所以请酌情投放灾难，否则信徒死了可就不好了。</div>
+      </div>
+    </div>
+
+    <!-- 回合流程 -->
+    <div style="background: #141414; border: 2px solid #c0392b; border-radius: 16px; padding: 16px; margin: 20px 0;">
+      <div style="font-weight: bold; color: #e63946; margin-bottom: 8px;">回合流程</div>
+      <div style="color: #e0e0e0;">
+        <strong>① 角色导入 → ② 投放末日 → ③ 下达指引 → ④ 事件播报 → ⑤ 角色反馈</strong><br>
+        完成即为一回合结束（末日商店里的灾难描述本身也是信息）。
+      </div>
+    </div>
+
+<!-- 基础规则表（卡片化） -->
+<h2 id="player-jichu">一·基础规则表</h2>
+
+<div class="rule-card">
+  <div class="rule-num">①</div>
+  <div class="rule-content"><strong>初始信仰力</strong>：200点</div>
+  <div class="rule-diamond">◈</div>
+</div>
+
+<div class="rule-card">
+  <div class="rule-num">②</div>
+  <div class="rule-content"><strong>每回合固定获得</strong>：100点</div>
+  <div class="rule-diamond">◈</div>
+</div>
+
+<div class="rule-card">
+  <div class="rule-num">③</div>
+  <div class="rule-content"><strong>随机事件获得</strong>：20~100点 / 200~400点</div>
+  <div class="rule-diamond">◈</div>
+</div>
+
+<div class="rule-card">
+  <div class="rule-num">④</div>
+  <div class="rule-content"><strong>信仰上限</strong>：5000点</div>
+  <div class="rule-diamond">◈</div>
+</div>
+
+<!-- 其他基础规则条目（卡片化） -->
+<div class="rule-card">
+  <div class="rule-num">⑤</div>
+  <div class="rule-content">您可从初始给予的三名信徒中选择一名降临世间，每回合可降下一次指引，或在遇到随机事件时额外下达指引。角色介绍中将会包含【性格】【年龄】【职业】【特质】4要素。</div>
+  <div class="rule-diamond">◈</div>
+</div>
+
+<div class="rule-card">
+  <div class="rule-num">⑥</div>
+  <div class="rule-content">您的信徒初期对您的信仰可能并不虔诚，需要您通过精准的指引和事件中的恩赐来逐步培养。信仰越深，信徒越倾向于遵从神谕。</div>
+  <div class="rule-diamond">◈</div>
+</div>
+
+<div class="rule-card">
+  <div class="rule-num">⑦</div>
+  <div class="rule-content">每回合末日商店全随机决定灾难类型，您可选择末日自由投放，直到信仰力花完为止（也可以选择不投放，储存信仰力）。</div>
+  <div class="rule-diamond">◈</div>
+</div>
+
+<div class="rule-card">
+  <div class="rule-num">⑧</div>
+  <div class="rule-content">指引不允许太过复杂，限制在一件事、一个地点。例如：请不要前往青海镇，那里会爆发瘟疫。（具体以KP为准）</div>
+  <div class="rule-diamond">◈</div>
+</div>
+
+<div class="rule-card">
+  <div class="rule-num">⑨</div>
+  <div class="rule-content">一回合为6个月时间，每个月都会产出事件。角色在此期间会自动成长，发生变化，获得加强或走向更差的结果。角色所经历的事件及其结果，将影响额外信仰力的获取。</div>
+  <div class="rule-diamond">◈</div>
+</div>
+
+<div class="rule-card">
+  <div class="rule-num">⑩</div>
+  <div class="rule-content">灾难分为长期灾难与短期灾难：短期灾难多为一次性，可投放至某一地点；长期灾难为全局性，可通过随机事件获得加强或连锁影响。若KP未发放地图，一次性灾难将为随机投放。</div>
+  <div class="rule-diamond">◈</div>
+</div>
+
+<div class="rule-card">
+  <div class="rule-num">⑪</div>
+  <div class="rule-content">您可自由锁定商店中的一项内容延续到下回合，锁定功能每两回合只能使用一次。</div>
+  <div class="rule-diamond">◈</div>
+</div>
+
+<div class="rule-card">
+  <div class="rule-num">⑫</div>
+  <div class="rule-content">您可在私聊初始选择本次的末日模拟类型：架空类、现代类或中世纪类，最终结果由投票决定。</div>
+  <div class="rule-diamond">◈</div>
+</div>
+
+<div class="rule-card">
+  <div class="rule-num">⑬</div>
+  <div class="rule-content">信徒拥有自身的性格、职业与判断，不会完全按照指引行事。</div>
+  <div class="rule-diamond">◈</div>
+</div>
+
+<div class="rule-card">
+  <div class="rule-num">⑭</div>
+  <div class="rule-content">指引是否拥有神性与准确，将会影响信徒对你的信仰，如果偏低，会导致突发事件信仰力提供也偏低（KP会通过事件或私聊告知结果）。</div>
+  <div class="rule-diamond">◈</div>
+</div>
+    <!-- 指引等级示例 -->
+    <h2 id="player-zhiyin">二·指引等级示例</h2>
+    <div style="background: #141414; border: 2px solid #c0392b; border-radius: 16px; padding: 16px; margin: 15px 0;">
+      <div style="font-weight: bold; color: #e63946; margin-bottom: 8px;">判定标准（三要素）</div>
+      <div style="color: #e0e0e0;">是否包含<strong>时间</strong>、是否包含<strong>地点</strong>、是否包含<strong>类型</strong>。附加项：是否具备<strong>神性语气</strong>。</div>
+    </div>
+    <div style="display: flex; flex-direction: column; gap: 16px; margin: 20px 0;">
+      <div style="background: #141414; border: 2px solid #c0392b; border-radius: 16px; padding: 16px;">
+        <div style="font-weight: bold; color: #e63946; margin-bottom: 8px;">一级（三要素均不满足）</div>
+        <div style="color: #e0e0e0;">“哥们儿，最近有点危险，小心行事。” → 模糊笼统，无额外奖励。</div>
+      </div>
+      <div style="background: #141414; border: 2px solid #c0392b; border-radius: 16px; padding: 16px;">
+        <div style="font-weight: bold; color: #e63946; margin-bottom: 8px;">二级（地点 + 事件类型）</div>
+        <div style="color: #e0e0e0;">“被选中之人，西南海将有星辰陨落，注意防范。” → 额外信仰力 +20~100点。</div>
+      </div>
+      <div style="background: #141414; border: 2px solid #c0392b; border-radius: 16px; padding: 16px;">
+        <div style="font-weight: bold; color: #e63946; margin-bottom: 8px;">三级（时间 + 地点 + 事件类型）</div>
+        <div style="color: #e0e0e0;">“1月之内西南海将有星辰陨落，注意防范，不要前往xxx区域。” → 额外信仰力 +200~400点。</div>
+      </div>
+    </div>
+    <p style="color: #888; font-size: 0.9em; margin: 0 0 20px 0;">神性语气（如“吾言之数句汝牢记之”“被选中之人”）可酌情提一档。</p>
+        <!-- 短期灾难等级表 -->
+    <h2 id="player-duanqi">三·短期灾难等级表</h2>
+    <table style="width: 100%; border-collapse: collapse; margin: 15px 0;">
+      <thead>
+        <tr>
+          <th style="border: 1px solid #c0392b; padding: 8px; background: #2a2a2a; color: #e63946;">等级</th>
+          <th style="border: 1px solid #c0392b; padding: 8px; background: #2a2a2a; color: #e63946;">消耗</th>
+          <th style="border: 1px solid #c0392b; padding: 8px; background: #2a2a2a; color: #e63946;">影响范围</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td style="border: 1px solid #c0392b; padding: 8px;">一级</td><td style="border: 1px solid #c0392b; padding: 8px;">100点</td><td style="border: 1px solid #c0392b; padding: 8px;">镇级灾难</td></tr>
+        <tr><td style="border: 1px solid #c0392b; padding: 8px;">二级</td><td style="border: 1px solid #c0392b; padding: 8px;">200点</td><td style="border: 1px solid #c0392b; padding: 8px;">市级灾难</td></tr>
+        <tr><td style="border: 1px solid #c0392b; padding: 8px;">三级</td><td style="border: 1px solid #c0392b; padding: 8px;">400点</td><td style="border: 1px solid #c0392b; padding: 8px;">省级灾难</td></tr>
+        <tr><td style="border: 1px solid #c0392b; padding: 8px;">四级</td><td style="border: 1px solid #c0392b; padding: 8px;">800点</td><td style="border: 1px solid #c0392b; padding: 8px;">国家级灾难</td></tr>
+        <tr><td style="border: 1px solid #c0392b; padding: 8px;">五级</td><td style="border: 1px solid #c0392b; padding: 8px;">1400点</td><td style="border: 1px solid #c0392b; padding: 8px;">世界级灾难</td></tr>
+      </tbody>
+    </table>
+
+    <!-- 长期灾难等级表 -->
+    <h2 id="player-changqi">四·长期灾难等级表</h2>
+    <table style="width: 100%; border-collapse: collapse; margin: 15px 0;">
+      <thead>
+        <tr>
+          <th style="border: 1px solid #c0392b; padding: 8px; background: #2a2a2a; color: #e63946;">等级</th>
+          <th style="border: 1px solid #c0392b; padding: 8px; background: #2a2a2a; color: #e63946;">消耗</th>
+          <th style="border: 1px solid #c0392b; padding: 8px; background: #2a2a2a; color: #e63946;">描述</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td style="border: 1px solid #c0392b; padding: 8px;">一级</td><td style="border: 1px solid #c0392b; padding: 8px;">100点</td><td style="border: 1px solid #c0392b; padding: 8px;">轻微灾难，基本不影响正常生活</td></tr>
+        <tr><td style="border: 1px solid #c0392b; padding: 8px;">二级</td><td style="border: 1px solid #c0392b; padding: 8px;">200点</td><td style="border: 1px solid #c0392b; padding: 8px;">常规灾难，引起政府注意</td></tr>
+        <tr><td style="border: 1px solid #c0392b; padding: 8px;">三级</td><td style="border: 1px solid #c0392b; padding: 8px;">400点</td><td style="border: 1px solid #c0392b; padding: 8px;">中型灾难，大批人口死亡</td></tr>
+        <tr><td style="border: 1px solid #c0392b; padding: 8px;">四级</td><td style="border: 1px solid #c0392b; padding: 8px;">800点</td><td style="border: 1px solid #c0392b; padding: 8px;">特大灾难，摧毁一个国家</td></tr>
+        <tr><td style="border: 1px solid #c0392b; padding: 8px;">五级</td><td style="border: 1px solid #c0392b; padding: 8px;">1400点</td><td style="border: 1px solid #c0392b; padding: 8px;">灭世级灾难，秩序崩塌</td></tr>
+      </tbody>
+    </table>
+
+    <hr>
+    <p style="color: #aaa; font-size: 0.9em;">
+      <strong>掷骰规则补充：</strong> 所有判定均使用 
+      <strong>d100（百分骰）</strong>，具体成功率见
+    <a href="#async-rules">基础规则补充</a>。</p>
+  </div>   <!-- 关闭 .kp-card -->
+</section>   <!-- 关闭 player-basic -->
+<section id="async-rules">
+  <div class="kp-card">
+    <h2>额外规则补充</h2>
+  </div>
+  <p><strong>介绍：</strong>此规则为原基础规则的补全，旨在优化游戏节奏与判定体系。</p>
+
+  <div class="async-cards">
+    <!-- 卡片1：核心变化 -->
+    <div class="async-card">
+      <div class="async-title">核心变化</div>
+      <div class="async-row">
+        <span class="async-label">节奏放缓</span>
+        <span class="async-value">玩家和KP均拥有充足的思考时间，可仔细思考策略与行动。</span>
+      </div>
+      <div class="async-row">
+        <span class="async-label">压力降低</span>
+        <span class="async-value">无需时刻在线等待对方操作，避免KP个人反馈压力过大，同时避免了玩家强行同时在线的硬性要求。</span>
+      </div>
+      <div class="async-row">
+        <span class="async-label">掷骰判定规则</span>
+        <span class="async-value">补充了事件判定、战斗对抗状态等相关判定规则。</span>
+      </div>
+    </div>
+
+    <!-- 卡片2：信息隔离 -->
+    <div class="async-card">
+      <div class="async-title">1. 信息隔离</div>
+      <ul>
+        <li>末日投放与下达指引<strong>必须同时私聊KP提交</strong>，提交后不可修改。</li>
+        <li>KP在收集齐所有玩家的行动之前，<strong>不得向任何玩家透露他人的灾难或指引内容</strong>。</li>
+        <li>结算时，KP统一公布事件结果，不单独披露每位玩家的具体选择。</li>
+      </ul>
+    </div>
+
+    <!-- 卡片3：灾难叠加与冲突算法 -->
+    <div class="async-card">
+      <div class="async-title">2. 灾难叠加与冲突算法</div>
+      <ul>  <li><strong>相同类型灾难叠加</strong>：最终等级 = 最高等级 + 其他玩家等级之和 ÷ 2（向上取整）。<br>例：玩家A投一级，玩家B投二级 → 二级 + (1/2) = 二级 + 0.5 → 向上取整为<strong>三级</strong>。</li>
+      <li>
+         <strong>不同类型灾难交互 </strong>：由KP根据叙事逻辑裁定
+ <br>（如“瘟疫”+“饥荒”引发人口锐减、秩序崩溃）。</li>
+</ul>  </div>
+
+    <!-- 卡片4：指引奖励 -->
+    <div class="async-card">
+      <div class="async-title">3. 指引奖励</div>
+      <p>指引等级判定中的“预判他人末日”是指：玩家在不知道对手选择的情况下，推测可能发生的灾害并提前提醒信徒。<br>
+      KP根据<strong>所有玩家实际投放的灾难效果</strong>来评估指引是否准确。</p>
+      <ul>
+        <li>正确可获得指引等级对应的信仰力奖励（即使信徒因阻抗未执行）。</li>
+      </ul>
+    </div>
+
+    <!-- 卡片5：超时与投票机制 -->
+    <div class="async-card">
+      <div class="async-title">4. 超时与投票机制</div>
+      <ul>
+        <li>每回合中，若玩家未额外说明离开，半小时内未反馈视为放弃该回合行动，信仰点储存。</li>
+        <li>若某玩家连续两回合未曾行动，KP在群内发起投票，由其他玩家决定：
+          <ul>
+            <li><strong>踢出对局</strong>：该玩家角色死亡，宗教解散。</li>
+            <li><strong>暂停游戏</strong>：等待该玩家下次时间充裕时继续（暂停期间不计入回合）。</li>
+          </ul>
+        </li>
+        <li>投票需超过半数（两人局需一致同意）。</li>
+      </ul>
+    </div>
+
+    <!-- 卡片6：掷骰规则 -->
+    <div class="async-card">
+      <div class="async-title">5. 掷骰规则</div>
+       <p><strong>骰子类型：d100（百分骰）</strong>，所有掷骰均使用此类型。</p>
+      <div style="margin-bottom: 16px;">
+        <div style="font-weight: bold; color: #e63946; margin-bottom: 8px;">事件判定</div>
+        <ul>
+          <li>1~10 = 神眷/大成功：角色额外获得赐福，玩家获得300点信仰力。</li>
+          <li>16~36 = 困难成功：角色额外获得物品奖励，玩家获得100点信仰力。</li>
+          <li>90~100 = 神弃者/大失败：事态更加严重，角色进入重伤状态，生命层次倒退。</li>
+        </ul>
+      </div>
+      <div>
+        <div style="font-weight: bold; color: #e63946; margin-bottom: 8px;">事件判定概率</div>
+        <p>基础成功率为10%。每项专长固定增加40%成功率；有利情景 +15%；合适的道具 +15%；角色特质契合 +15%。反之则扣除成功率。</p>
+      </div>
+      <div style="margin-top: 16px;">
+        <div style="font-weight: bold; color: #e63946; margin-bottom: 8px;">战斗判定</div>
+        <p>根据场地、角色状态、专长三项主要属性根据自身成功率分别掷骰进行战斗对抗。</p>
+        <ul>
+          <li>轻伤状态对抗成功率减少10%</li>
+          <li>重伤则自动失败</li>
+          <li>肢体残缺，对抗成功率减少20%</li>
+          <li>饥饿/饥渴状态下，对抗成功率减少5%</li>
+          <li>精神失常状态下，对抗成功率减少15%</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+<section id="shenzhan-kp">
+  <div class="kp-card">
+    <h2>神战KP守则</h2>
+  </div>
+<!-- 神战KP守则 · 椭圆菱形目录卡片 -->
+<div class="kp-card elliptic-card" style="position: relative; border-radius: 60px; background: #141414; border: 2px solid #c0392b; border-left: none; border-right: none; padding: 20px 32px; margin: 24px 0; box-shadow: 0 4px 12px rgba(0,0,0,0.5); transition: all 0.2s ease;">
+  <div style="position: absolute; top: 12px; left: 20px; font-size: 1.6em; color: #e63946; opacity: 0.6;">♦</div>
+  <div style="position: absolute; bottom: 12px; right: 20px; font-size: 1.6em; color: #e63946; opacity: 0.6;">♦</div>
+  <div style="text-align: center; margin-bottom: 16px;">
+    <span style="display: inline-block; background: #2a0f0a; padding: 4px 20px; border-radius: 40px; color: #e63946; font-weight: bold; letter-spacing: 2px;">✦ 快速查阅目录 ✦</span>
+  </div>
+  <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 12px 20px;">
+    <a href="#shenzhan-gailan" style="background: #1e1e1e; border: 1px solid #c0392b; border-radius: 40px; padding: 6px 20px; color: #e63946; text-decoration: none; font-size: 0.95em; transition: all 0.2s;">◈核心变化</a>
+    <a href="#shenzhan-zhunbei" style="background: #1e1e1e; border: 1px solid #c0392b; border-radius: 40px; padding: 6px 20px; color: #e63946; text-decoration: none; font-size: 0.95em; transition: all 0.2s;">◈准备清单</a>
+    <a href="#shenzhan-jichu" style="background: #1e1e1e; border: 1px solid #c0392b; border-radius: 40px; padding: 6px 20px; color: #e63946; text-decoration: none; font-size: 0.95em; transition: all 0.2s;">◈基础规则</a>
+    <a href="#shenzhan-cengci" style="background: #1e1e1e; border: 1px solid #c0392b; border-radius: 40px; padding: 6px 20px; color: #e63946; text-decoration: none; font-size: 0.95em; transition: all 0.2s;">◈生命层次</a>
+    <a href="#shenzhan-yansheng" style="background: #1e1e1e; border: 1px solid #c0392b; border-radius: 40px; padding: 6px 20px; color: #e63946; text-decoration: none; font-size: 0.95em; transition: all 0.2s;">◈衍生事件图</a>
+  </div>
+  <div style="text-align: center; margin-top: 14px; font-size: 0.75em; color: #aaa;">
+    <span>⬥ 点击任意条目快速跳转 ⬥</span>
+  </div>
+</div>
+
+<style>
+  .elliptic-card a:hover {
+    background: #c0392b !important;
+    color: #141414 !important;
+    transform: translateY(-2px);
+    box-shadow: 0 0 8px #e63946;
+  }
+  .elliptic-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 0 18px rgba(230, 57, 70, 0.5);
+  }
+</style>
+
+  <!-- 一·核心变化概括 -->
+  <div class="kp-card">
+    <h2 id="shenzhan-gailan">一·核心变化概括</h2>
+    <ol>
+      <li>玩家初始将拥有自己的宗教，只要角色未死亡，宗教覆灭后可再次重建</li>
+      <li>只要宗教未覆灭，就不被判定为失败。信仰不灭，生生不息</li>
+      <li>玩家可赐福信徒，让信徒增强，作为神选者代行人，宣传自身宗教势力，覆灭其他宗教势力</li>
+      <li>世界拥有本土神明，负责维护稳定与生灵。玩家需要与本土神明抗争。末日降临后，随着第1个国家崩塌或神战开启，本土神明将会展开一系列救世行动，与玩家对抗</li>
+      <li>新增胜利条件：信徒登基为神；成为全场唯一宗教</li>
+      <li>变更失败条件：只有信徒与宗教全部灭亡才会失败</li>
+    </ol>
+  </div>
+
+  <!-- 核心术语 -->
+  <div class="kp-card">
+    <h2 id="shenzhan-shuyu">核心术语</h2>
+    <ul>
+      <li><strong>神选者</strong>：玩家赐福的信徒，同一玩家只能有一名神选者</li>
+      <li><strong>神战</strong>：神战开启后，玩家将会有陨落的风险，为DLC主要核心点</li>
+      <li><strong>权柄</strong>：神明陨落后散落的本源力量，是传奇生命跃升半神或真神的唯一途径</li>
+      <li><strong>信徒进阶</strong>：通过赐福信徒令其生命层次进阶，是DLC另一核心点</li>
+    </ul>
+  </div>
+
+  <!-- 二·KP准备清单 -->
+  <div class="kp-card">
+    <h2 id="shenzhan-zhunbei">二·KP准备清单</h2>
+    <ol>
+      <li>确保已阅读并理解<a href="#" onclick="switchSection('kp-basic')">基础KP守则</a>。玩家侧规则见<a href="#" onclick="switchSection('shenzhan-player')">神战玩家守则</a></li>
+      <li>根据所选类型（现代/中世纪/架空），预设本土神明/势力的形象与行动风格</li>
+      <li>决定裁决模式：叙事模式 / 数值模式 / 混合模式</li>
+      <li>为每位玩家准备神选者赐福的描述文案</li>
+    </ol>
+  </div>
+
+<!-- 三·基础规则：每条规则独立卡片（标准化版） -->
+<h2 id="shenzhan-jichu">三·基础规则</h2>
+
+<div class="rule-card">
+  <div class="rule-num">①</div>
+  <div class="rule-content"><strong>胜利条件</strong>：唯一宗教胜利，信徒登神胜利，以及基础胜利规则（角色活到最后）三者应共存。</div>
+  <div class="rule-diamond">◈</div>
+</div>
+
+<div class="rule-card">
+  <div class="rule-num">②</div>
+  <div class="rule-content"><strong>灾难衍生</strong>：玩家选择初始四大种类后，每一大种类会衍生出后续事件，并固定产出两个相关末日类型。</div>
+  <div class="rule-diamond">◈</div>
+</div>
+
+<div class="rule-card">
+  <div class="rule-num">③</div>
+  <div class="rule-content">
+    <strong>战争</strong>可衍生：叛乱、边境冲突、异族入侵、革命<br>
+    <strong>瘟疫</strong>可衍生：黑死病、天花、增生病、新冠<br>
+    <strong>文化</strong>可衍生：异教兴起、科技倒退、神权陨落<br>
+    <strong>饥荒</strong>可衍生：高温、大雨、洪灾、地震、低温<br>
+    （鉴于基础规则中也可以使用此类锚定，以方便KP产出相应的默认类型，此规则可单独使用）
+  </div>
+  <div class="rule-diamond">◈</div>
+</div>
+
+<div class="rule-card">
+  <div class="rule-num">④</div>
+  <div class="rule-content">
+    <strong>赐福与神选者</strong>：在赐福商店中赐福信徒后，信徒将自动转变为神选者。<br>
+    一名玩家的神选者击杀其他神选者时，获得1000点信仰力。<br>
+    （此规则可单独启用或关闭）
+  </div>
+  <div class="rule-diamond">◈</div>
+</div>
+
+<!-- 特殊说明卡片：击杀神选者裁决模式 -->
+<div class="rule-card" style="background: #1a1a1a; border-left: 4px solid #e63946; padding: 16px 20px 16px 60px;">
+  <div class="rule-num" style="background: #3a1f1a;">⚠</div>
+  <div class="rule-content">
+    <strong style="color: #e63946;">KP注意：如何判定“击杀神选者”</strong><br>
+    神选者之间的击杀，不推荐只靠骰子。KP可根据开团中的侧重点和自身偏好，选择以下裁决模式：
+    <ul style="margin: 8px 0 0 20px;">
+      <li><strong>叙事主导模式（推荐）</strong>：根据角色卡的能力、所处环境、玩家的策略描述，由KP直接裁定击杀结果。</li>
+      <li><strong>数值对抗模式</strong>：设定攻/防数值，进行简单的比大小对抗（一般情况下需要角色数据记录表）。</li>
+      <li><strong>混合模式</strong>：关键的战斗用数值对抗，非关键战斗则可直接通过骰子判定，围攻则由KP直接裁定。</li>
+    </ul>
+  </div>
+  <div class="rule-diamond">◈</div>
+</div>
+
+<div class="rule-card">
+  <div class="rule-num">⑤</div>
+  <div class="rule-content"><strong>神选者唯一性</strong>：每一份玩家只能有一名神选者，在前一位神选者死亡前不可再诞生其他神选者。</div>
+  <div class="rule-diamond">◈</div>
+</div>
+
+<div class="rule-card">
+  <div class="rule-num">⑥</div>
+  <div class="rule-content"><strong>赐福类型</strong>：赐福商店中具体类型为4种，包括但不限于增幅属性、增幅道具、增幅势力。玩家可自行决定商店增幅等级，增幅最高三级。</div>
+  <div class="rule-diamond">◈</div>
+</div>
+
+<div class="rule-card">
+  <div class="rule-num">⑦</div>
+  <div class="rule-content"><strong>生命层次晋升</strong>：神选者(信徒)在被赐福后会得到神力加强，生命层次将晋升。</div>
+  <div class="rule-diamond">◈</div>
+</div>
+
+<div class="rule-card">
+  <div class="rule-num">⑧</div>
+  <div class="rule-content"><strong>权柄与陨落</strong>：玩家及本土神明在被击败后将会陨落，权柄散落在各处，这就给了传奇生命跃升半神或真神的机会。</div>
+  <div class="rule-diamond">◈</div>
+</div>
+
+<!-- 特殊说明卡片：吸收权柄 -->
+<div class="rule-card" style="background: #1a1a1a; border-left: 4px solid #e63946; padding: 16px 20px 16px 60px;">
+  <div class="rule-num" style="background: #3a1f1a;">⚠</div>
+  <div class="rule-content">
+    <strong style="color: #e63946;">KP注意：吸收权柄</strong><br>
+    第1次吸收权柄时，应当触发随机事件，让信徒寻求玩家的指引，再根据玩家指引以及提到的信徒情况，增加成功率。（默认为ra40）判定失败则信徒生命层次会倒退，并在三回合内无法吸收任何权柄或赐福。<br>
+    （权柄吸收每失败一次，下一次成功率增加10%，最高增加30%）
+  </div>
+  <div class="rule-diamond">◈</div>
+</div>
+
+<div class="rule-card">
+  <div class="rule-num">⑨</div>
+  <div class="rule-content"><strong>宗教规则</strong>：玩家初始将拥有自己的宗教，并拥有信仰，胜利条件变更为全场只剩唯一宗教（此规则可单独启用或关闭）。</div>
+  <div class="rule-diamond">◈</div>
+</div>
+
+<div class="rule-card">
+  <div class="rule-num">⑩</div>
+  <div class="rule-content"><strong>本土神明</strong>：拥有本土神明（势力）负责维护稳定与生灵。玩家需要与本土神明抗争。<br>末日降临后，随着第1个国家崩塌或神战开启后，本土神明将会展开一系列救世行动，与玩家对抗。</div>
+  <div class="rule-diamond">◈</div>
+</div>
+
+<div class="rule-card">
+  <div class="rule-num">⑪</div>
+  <div class="rule-content">
+    <strong>例如：</strong>科技革新、神选者、大丰收、药液研发，效果由KP自行裁定。<br>
+    <strong>KP注意：</strong>神明势力（包括玩家）行动将顶替原有事件。例如：A神明势力行动，研发药物的事件播报顶替了原有的世界播报。（个人推荐单个本土神明势力每回合只行动一次）<br>
+    （此规则可单独启用或关闭）
+  </div>
+  <div class="rule-diamond">◈</div>
+</div>
+
+<div class="rule-card">
+  <div class="rule-num">⑫</div>
+  <div class="rule-content">
+    <strong>神战开启</strong>：第二回合后，玩家可在任意回合选择开启神战。最先开启者将获得500点信仰点数。<br>
+    所有玩家在之后的每回合额外获得100点信仰力，并触发相关事件。<br>
+    但请注意，神战开启后，游戏进程将会额外加快。世界默认直接陷入战乱状态。<br>
+    （攻击其他神选者或势力，默认开启神战）
+  </div>
+  <div class="rule-diamond">◈</div>
+</div>
+
+<div class="rule-card">
+  <div class="rule-num">⑬</div>
+  <div class="rule-content"><strong>宗教覆灭与角色死亡</strong>：当一位玩家的宗教势力覆灭但角色未死亡时，玩家需重建宗教与信仰。<br>角色死亡但宗教未覆灭时，玩家可在自己宗教中再次选择角色。</div>
+  <div class="rule-diamond">◈</div>
+</div>
+
+<div class="rule-card">
+  <div class="rule-num">⑭</div>
+  <div class="rule-content">重新选择角色时，新角色不再继承神选者身份。当角色和宗教同时死亡，为出局。</div>
+  <div class="rule-diamond">◈</div>
+</div>
+
+<!-- 特殊说明卡片：节奏拖沓 -->
+<div class="rule-card" style="background: #1a1a1a; border-left: 4px solid #e63946; padding: 16px 20px 16px 60px;">
+  <div class="rule-num" style="background: #3a1f1a;">⚠</div>
+  <div class="rule-content">
+    <strong style="color: #e63946;">KP注意：节奏拖沓</strong><br>
+    为避免节奏拖沓，若某一玩家宗教势力覆灭但角色未死亡，须每三回合在事件中插入一条该角色相关动向，替换掉原计划的某个事件。<br>
+    <strong>例如：</strong>原计划本月发布“边境冲突”事件 → 改为发布“坊间传闻，前圣女贞德的残存信徒仍在偏僻村落秘密流窜”。
+  </div>
+  <div class="rule-diamond">◈</div>
+</div>
+  <!-- 四·信徒生命层次 -->
+  <div class="kp-card">
+    <h2 id="shenzhan-cengci">四·信徒生命层次</h2>
+    <blockquote>
+      <p><strong>1.【凡物】</strong><br>普通生命，正如当前世间的大部分生灵</p>
+      <p><strong>2.【超凡】</strong><br>二级增幅过2~3项能力的超凡生命，属于天才，例如高斯</p>
+      <p><strong>3.【传奇】</strong><br>三级增幅过6~8项能力的怪物，一人灭一国不是问题</p>
+      <p><strong>4.【半神】</strong><br>半神之下终为蝼蚁。半神真正意义上拥有了规则的使用权</p>
+      <p><strong>5.【真神】</strong><br>与您一样，这个层次的生命体都是神明之一，拥有规则的制定权，甚至创造权</p>
+    </blockquote>
+  </div>
+
+  <!-- 赐福等级 -->
+  <div class="kp-card">
+    <h2>赐福等级</h2>
+    <p>（由于有低武中武高武三种，表现形式与威力也完全不同，所以KP可自行决定效果描述）</p>
+    <ul>
+      <li><strong>一级·100点</strong>：信徒某项能力初步摸到超凡门槛</li>
+      <li><strong>二级·400点</strong>：信徒某项能力达到超凡，常人还可以简单理解，但已经属于是顶尖天才了，相当于高斯</li>
+      <li><strong>三级·800点</strong>：信徒的某一项能力已经完全无法被常人所理解，被世人称为神技，但与半神这种真正吸收神明权柄的角色有天壤之别</li>
+    </ul>
+  </div>
+
+  <!-- 赐福商店 -->
+  <div class="kp-card">
+    <h2>赐福商店</h2>
+    <p>（仅在神战DLC或启用相关规则后使用）</p>
+    <blockquote>
+      <p>赐福商店的具体等级玩家可自行决定，KP可直接说出类型，由玩家决定投放哪种等级<br><strong>例如：</strong>增幅A信徒的智力，一级100点，让其能直接从初中在三天内攻读到初三知识，令信徒直接初步摸到超凡门槛</p>
+    </blockquote>
+    <p>1：——————————————</p>
+    <p>2：——————————————</p>
+    <p>3：——————————————</p>
+    <p>4：——————————————</p>
+    <p>5：——————————————</p>
+  </div>
+
+  <!-- 五·衍生事件效果图（纯表格，无嵌套） -->
+  <h2 id="shenzhan-yansheng">五·衍生事件效果图</h2>
+  <style>
+    @media (max-width: 768px) {
+      .derived-table, .derived-table thead, .derived-table tbody, .derived-table th, .derived-table td, .derived-table tr { display: block; }
+      .derived-table thead tr { display: none; }
+      .derived-table tr { margin-bottom: 15px; border: 1px solid #c0392b; padding: 12px; background: #1e1e1e; }
+      .derived-table td { border: none; padding: 4px 0; }
+      .derived-table td:first-child { font-weight: bold; font-size: 1.05em; color: #e63946; }
+      .derived-table td:nth-child(2) { color: #e63946; font-weight: bold; margin-bottom: 4px; }
+      .derived-table td:last-child { color: #e0e0e0; }
+    }
+  </style>
+  <table class="derived-table" style="width: 100%; border-collapse: collapse; margin: 20px 0;">
+    <thead>
+      <tr>
+        <th style="width:10%; border:1px solid #c0392b; padding:8px; background:#2a2a2a; color:#e63946;">事件类型</th>
+        <th style="width:12%; border:1px solid #c0392b; padding:8px; background:#2a2a2a; color:#e63946;">事件名</th>
+        <th style="width:78%; border:1px solid #c0392b; padding:8px; background:#2a2a2a; color:#e63946;">效果蓝图（KP参考）</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td style="border:1px solid #c0392b; padding:8px;">战争</td><td style="border:1px solid #c0392b; padding:8px;">叛乱</td><td style="border:1px solid #c0392b; padding:8px;"><strong>触发 →</strong> 冲击武备库、城主府等关键设施<br><strong>发展 →</strong> 城中大规模人口死亡，建筑被毁<br><strong>衍生 →</strong> 镇压行动 → 边境兵力空虚 → 邻国入侵</td></tr>
+      <tr><td style="border:1px solid #c0392b; padding:8px;">战争</td><td style="border:1px solid #c0392b; padding:8px;">边境冲突</td><td style="border:1px solid #c0392b; padding:8px;"><strong>触发 →</strong> 领土争议、商路封锁、驻军摩擦升级<br><strong>连锁 →</strong> 国与国对抗 → 高额战争税 → 抓壮丁导致民间生产力骤降<br><strong>衍生 →</strong> 饥荒、革命、宗教趁乱扩权</td></tr>
+      <tr><td style="border:1px solid #c0392b; padding:8px;">瘟疫</td><td style="border:1px solid #c0392b; padding:8px;">黑死病</td><td style="border:1px solid #c0392b; padding:8px;"><strong>触发 →</strong> 卫生条件极差，鼠群大量繁殖<br><strong>病症 →</strong> 高烧、咳血、皮肤溃烂<br><strong>发展 →</strong> 城市人口骤减 → 商业停滞 → 民众恐慌逃窜 → 瘟疫扩散<br><strong>应对 →</strong> 政府研制药物、焚烧尸体、隔离病区<br><strong>恶化 →</strong> 大规模死亡 → 劳动力枯竭 → 饥荒</td></tr>
+      <tr><td style="border:1px solid #c0392b; padding:8px;">文化</td><td style="border:1px solid #c0392b; padding:8px;">异教兴起</td><td style="border:1px solid #c0392b; padding:8px;"><strong>触发 →</strong> 民众恐慌/不满，旧宗教权威无法服众<br><strong>表现 →</strong> 新神信仰出现，或转向邪神崇拜（献祭、烧杀抢掠）<br><strong>连锁 →</strong> 抢夺释经权 → 教派分裂 → 宗教权威受损<br><strong>应对 →</strong> 教会判定为异端/邪教，格杀勿论<br><strong>恶化 →</strong> 触发神权崩塌事件，教会统治力瓦解</td></tr>
+      <tr><td style="border:1px solid #c0392b; padding:8px;">饥荒</td><td style="border:1px solid #c0392b; padding:8px;">高温</td><td style="border:1px solid #c0392b; padding:8px;"><strong>触发 →</strong> 持续高温导致农作物/人口大面积死亡。</td>
+  </tr>
+    </tbody>
+</table>
+</section>   <!-- 闭合 shenzhan-kp -->
+
+<section id="shenzhan-player">
+  <div class="kp-card">
+    <h2>神战玩家规则</h2>
+    <p>本DLC为可选扩展规则，开启后游戏时长将额外增加2-3小时。所有规则均可单独启用或关闭，由玩家与KP协商决定。</p>
+    <blockquote style="margin: 12px 0 0 0;">
+      <p>请先阅读<a href="#" onclick="switchSection('player-basic')">基础玩家规则</a>，KP裁决规则见<a href="#" onclick="switchSection('shenzhan-kp')">神战KP守则</a>。</p>
+    </blockquote>
+  </div>
+<!-- 神战玩家规则 · 椭圆菱形目录卡片 -->
+<div class="kp-card elliptic-card" style="position: relative; border-radius: 60px; background: #141414; border: 2px solid #c0392b; border-left: none; border-right: none; padding: 20px 32px; margin: 24px 0; box-shadow: 0 4px 12px rgba(0,0,0,0.5); transition: all 0.2s ease;">
+  <div style="position: absolute; top: 12px; left: 20px; font-size: 1.6em; color: #e63946; opacity: 0.6;">♦</div>
+  <div style="position: absolute; bottom: 12px; right: 20px; font-size: 1.6em; color: #e63946; opacity: 0.6;">♦</div>
+  <div style="text-align: center; margin-bottom: 16px;">
+    <span style="display: inline-block; background: #2a0f0a; padding: 4px 20px; border-radius: 40px; color: #e63946; font-weight: bold; letter-spacing: 2px;">✦ 快速查阅目录 ✦</span>
+  </div>
+  <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 12px 20px;">
+    <a href="#shenzhan-player-core" style="background: #1e1e1e; border: 1px solid #c0392b; border-radius: 40px; padding: 6px 20px; color: #e63946; text-decoration: none; font-size: 0.95em; transition: all 0.2s;">◈ 核心术语</a>
+    <a href="#shenzhan-player-overview" style="background: #1e1e1e; border: 1px solid #c0392b; border-radius: 40px; padding: 6px 20px; color: #e63946; text-decoration: none; font-size: 0.95em; transition: all 0.2s;">◈ DLC核心玩法概述</a>
+    <a href="#shenwan-jichu" style="background: #1e1e1e; border: 1px solid #c0392b; border-radius: 40px; padding: 6px 20px; color: #e63946; text-decoration: none; font-size: 0.95em; transition: all 0.2s;">◈ 基础规则</a>
+    <a href="#shenzhan-player-life" style="background: #1e1e1e; border: 1px solid #c0392b; border-radius: 40px; padding: 6px 20px; color: #e63946; text-decoration: none; font-size: 0.95em; transition: all 0.2s;">◈ 信徒生命层次</a>
+  </div>
+  <div style="text-align: center; margin-top: 14px; font-size: 0.75em; color: #aaa;">
+    <span>⬥ 点击任意条目快速跳转 ⬥</span>
+  </div>
+</div>
+<style>
+  /* 悬停效果增强（可选） */
+  .elliptic-card a:hover {
+    background: #c0392b !important;
+    color: #141414 !important;
+    transform: translateY(-2px);
+    box-shadow: 0 0 8px #e63946;
+  }
+  .elliptic-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 0 18px rgba(230, 57, 70, 0.5);
+  }
+</style>
+  <h2 id="shenzhan-player-core">核心术语</h2>
+  <div style="display: flex; flex-direction: column; gap: 16px; margin: 20px 0;">
+    <div class="kp-card" style="margin: 0;"><div style="font-weight: bold; color: #e63946; margin-bottom: 8px;">神选者</div><div>您赐福的信徒，同一神明只能有一名神选者。</div></div>
+    <div class="kp-card" style="margin: 0;"><div style="font-weight: bold; color: #e63946; margin-bottom: 8px;">神战</div><div>神战开启后，您将会有陨落的风险，慎重开启。</div></div>
+    <div class="kp-card" style="margin: 0;"><div style="font-weight: bold; color: #e63946; margin-bottom: 8px;">权柄</div><div>神明陨落后散落的本源力量，是传奇生命跃升半神或真神的唯一途径。</div></div>
+    <div class="kp-card" style="margin: 0;"><div style="font-weight: bold; color: #e63946; margin-bottom: 8px;">信徒进阶</div><div>赐福信徒令其生命进阶，是DLC主要核心点。</div></div>
+  </div>
+
+  <h2 id="shenzhan-player-overview">DLC核心玩法概述</h2>
+    <p>尊敬的神明大人，神战DLC为您增加了以下全新维度：</p>
+  <div style="display: flex; flex-direction: column; gap: 16px; margin: 20px 0;">
+    <div class="kp-card" style="margin: 0;"><div style="font-weight: bold; color: #e63946; margin-bottom: 8px;">① 宗教系统</div><div>您将拥有建立自己宗教的机会，宗教建立后，只要角色未死亡，游戏亦可继续，而宗教覆灭后可再次重建。<br>【信仰不灭·我神永存】</div></div>
+    <div class="kp-card" style="margin: 0;"><div style="font-weight: bold; color: #e63946; margin-bottom: 8px;">② 赐福信徒</div><div>您可赐福信徒，让信徒增强，作为神选者代行人，宣传自身宗教势力，覆灭其他宗教势力。</div></div>
+    <div class="kp-card" style="margin: 0;"><div style="font-weight: bold; color: #e63946; margin-bottom: 8px;">③ 本土神明</div><div>世界拥有本土神明，负责维护稳定与生灵。随着第1个国家崩塌或神战开启后，本土神明将会展开一系列救世行动，与您对抗。您可以选择狩猎这群看门犬，这也是乐趣之一。</div></div>
+    <div class="kp-card" style="margin: 0;"><div style="font-weight: bold; color: #e63946; margin-bottom: 8px;">④ 新增胜利条件</div><div>信徒登基为神；成为全场唯一宗教。</div></div>
+    <div class="kp-card" style="margin: 0;"><div style="font-weight: bold; color: #e63946; margin-bottom: 8px;">⑤ 变更失败条件</div><div>只有信徒与宗教全部灭亡才会失败。</div></div>
+  </div>
+
+  <h2 id="shenwan-jichu">基础规则</h2>
+  <div style="display: flex; flex-direction: column; gap: 16px; margin: 20px 0;">
+    <div class="kp-card" style="margin: 0;"><div><strong style="color: #e63946;">1.</strong> 您选择初始四大种类后，每一大种类会衍生出后续事件。</div></div>
+    <div class="kp-card" style="margin: 0;"><div><strong style="color: #e63946;">2.</strong> 您初始可选择3个角色，分为现代类、架空类、中世纪类。三种角色在不同的世界观下会受到不同的影响与削弱（具体由KP决定）。</div></div>
+    <div class="kp-card" style="margin: 0;"><div><strong style="color: #e63946;">3.</strong> 开局时，您必须从以下四大神明类型中选择一种，它将决定您后续可衍生的末日事件：战争、瘟疫、文化、饥荒（此规则可单独启用或关闭）。</div></div>
+    <div class="kp-card" style="margin: 0;"><div><strong style="color: #e63946;">4.</strong> 您初始将拥有自己的宗教，并拥有信仰，只要宗教不灭，哪怕角色死亡，亦可游戏继续，直至宗教势力灭亡（此规则可单独启用或关闭）。</div></div>
+    <div class="kp-card" style="margin: 0;"><div><strong style="color: #e63946;">5.</strong> 除非国家（大型势力）覆灭或主动开启神战，否则本土神明第一时间将不会知晓您的存在与动向，且本土神明/势力最少一个，最多为五（此规则可单独启用或关闭）。</div></div>
+    <div class="kp-card" style="margin: 0;"><div><strong style="color: #e63946;">6.</strong> 您可在第2回合后的任意回合选择是否开启【神战】。最先开启者将立即获得500点信仰力，所有玩家在后续回合可额外获得100点信仰力。</div></div>
+    <div class="kp-card" style="margin: 0;"><div><strong style="color: #e63946;">7.</strong> 您可在信仰商店中消耗信仰力增幅信徒，将其转化为“神选者”。在神选者死亡前，您不能赐福别人（此规则可单独启用或关闭）。</div></div>
+    <div class="kp-card" style="margin: 0;"><div><strong style="color: #e63946;">8.</strong> 您的神选者在击杀其他神明的神选者时，您可获得1000点信仰点数。</div></div>
+    <div class="kp-card" style="margin: 0;"><div><strong style="color: #e63946;">9.</strong> 您可自行决定商店增幅等级，每一级与末日商店等级消耗相同。</div></div>
+    <div class="kp-card" style="margin: 0;"><div><strong style="color: #e63946;">10.</strong> 宗教覆灭后，若角色未死亡，游戏亦可继续，不过您将从零重建宗教势力。</div></div>
+    <div class="kp-card" style="margin: 0;"><div><strong style="color: #e63946;">11.</strong> 开启神战后，若宗教覆灭但角色未死亡，每三个回合KP将向其他神明汇报自身角色行动信息一条（不包含位置）。</div></div>
+  </div>
+
+  <div class="kp-card">
+    <h2>重要提示</h2>
+    <blockquote style="margin: 0;"><p>神战开启前，尊敬的神明大人请确保您已做好与其他所有神明为敌的准备。<br>否则除非信徒足够强大，我个人建议您优先保护宗教，毕竟只要信仰存在，您就不会输。</p></blockquote>
+  </div>
+
+  <h2 id="shenzhan-player-life">信徒生命层次</h2>
+  <div style="display: flex; flex-direction: column; gap: 16px; margin: 20px 0;">
+    <div class="kp-card" style="margin: 0;"><div style="font-weight: bold; color: #e63946; margin-bottom: 8px;">1.【凡物】</div><div>普通生命，正如当前世间的大部分生灵。</div></div>
+    <div class="kp-card" style="margin: 0;"><div style="font-weight: bold; color: #e63946; margin-bottom: 8px;">2.【超凡】</div><div>二级增幅过2~3项能力的超凡生命，属于天才，例如高斯。</div></div>
+    <div class="kp-card" style="margin: 0;"><div style="font-weight: bold; color: #e63946; margin-bottom: 8px;">3.【传奇】</div><div>三级增幅过6~8项能力的怪物，一人灭一国不是问题。</div></div>
+    <div class="kp-card" style="margin: 0;"><div style="font-weight: bold; color: #e63946; margin-bottom: 8px;">4.【半神】</div><div>半神之下终为蝼蚁。半神真正意义上拥有了规则的使用权，与其他等级是完全不同的生命层次。</div></div>
+    <div class="kp-card" style="margin: 0;"><div style="font-weight: bold; color: #e63946; margin-bottom: 8px;">5.【真神】</div><div>与您一样，这个层次的生命体都是神明之一，拥有规则的制定权，甚至创造权。</div></div>
+  </div>
+</section>
+<section id="rule-switches">
+  <div class="kp-card">
+    <h2>额外规则速查</h2>
+  </div>
+  <p>以下汇总了神战DLC与阵营战DLC中所有可单独启用或关闭的规则条目，供KP快速查阅与组合使用</p>
+
+  <style>
+    @media (max-width: 768px) {
+      .switch-table, .switch-table thead, .switch-table tbody, .switch-table th, .switch-table td, .switch-table tr { display: block; }
+      .switch-table thead tr { display: none; }
+      .switch-table tr { margin-bottom: 15px; border: 1px solid #c0392b; padding: 12px; background:#1e1e1e; }
+      .switch-table td { border: none; padding: 4px 0; }
+      .switch-table td:first-child { font-weight: bold; font-size: 1.05em; color: #2c3e50; }
+      .switch-table td:nth-child(2) { color: #444; }
+      .switch-table td:last-child { color: #666; font-size: 0.95em; }
+    }
+  </style>
+
+  <h2>神战DLC</h2>
+  <table class="switch-table">
+    <thead>
+      <tr><th>规则名称</th><th>规则摘要</th><th>启用/关闭说明</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>灾难衍生锚定</td>
+        <td>四大神明类型固定产出对应的末日事件子类型（如战争→叛乱、边境冲突等）</td>
+        <td>可单独使用。即使不开神战DLC，KP也可用此锚定表辅助生成末日事件</td>
+      </tr>
+      <tr>
+        <td>神选者击杀裁决模式</td>
+        <td>神选者之间的击杀可选择叙事主导、数值对抗或混合模式进行判定</td>
+        <td>可单独启用或关闭。关闭时按基础规则处理</td>
+      </tr>
+      <tr>
+        <td>宗教系统（KP侧）</td>
+        <td>玩家拥有宗教，胜利条件变更为全场只剩唯一宗教</td>
+        <td>可单独启用或关闭。关闭时沿用基础胜利条件（信徒存活）</td>
+      </tr>
+      <tr>
+        <td>宗教系统（玩家侧）</td>
+        <td>玩家拥有宗教，只要宗教不灭，角色死亡亦可继续游戏</td>
+        <td>可单独启用或关闭（与KP侧配套）</td>
+      </tr>
+      <tr>
+        <td>本土神明行动</td>
+        <td>本土神明在末日或神战后展开救世行动，行动顶替事件</td>
+        <td>可单独启用或关闭</td>
+      </tr>
+      <tr>
+        <td>神战开启条件（玩家侧）</td>
+        <td>玩家可在任意回合主动开启神战，或攻击其他宗教/神选者默认开启</td>
+        <td>可单独启用或关闭</td>
+      </tr>
+      <tr>
+        <td>神选者赐福（玩家侧）</td>
+        <td>玩家消耗信仰力增幅信徒为神选者，神选者死亡前不可赐福他人</td>
+        <td>可单独启用或关闭</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2>阵营战DLC</h2>
+  <table class="switch-table">
+    <thead>
+      <tr><th>规则名称</th><th>规则摘要</th><th>启用/关闭说明</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>特殊事件衍生</td>
+        <td>角色背景与随机事件可衍生出特殊事件，产生特殊效果</td>
+        <td>可单独启用或关闭</td>
+      </tr>
+      <tr>
+        <td>势力战模式</td>
+        <td>5回合后主动进入势力战，胜利条件从角色死亡更换为势力覆灭</td>
+        <td>可单独启用或关闭</td>
+      </tr>
+      <tr>
+        <td>阵营特殊胜利条件</td>
+        <td>各阵营拥有独立的特殊胜利条件（如商队累积资金5万、教会维持统治20回合等）</td>
+        <td>可单独启用或关闭</td>
+      </tr>
+      <tr>
+        <td>额外数值系统</td>
+        <td>引入声望值、势力值、资金三项国策性数值</td>
+        <td>开启势力战时必须记录资金，其余可选</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <blockquote>
+    <p><strong>使用说明：</strong>此表仅供速查参考。具体规则细节请参阅对应DLC章节。阵营战DLC仍在构筑中，内容可能随版本更新调整</p>
+  </blockquote>
+</section>
+<section id="guideline-ref">
+  <div class="kp-card">
+    <h2>指引等级判定参考</h2>
+  </div>
+  <div class="kp-card">
+    <p><strong>判定逻辑：</strong>满足一项要素 → 一级；满足两项 → 二级；三项全满足 → 三级。神性语气（如"被选中之人""吾言之数句汝牢记之"）可酌情提一档。</p>
+    <p style="margin-top: 8px; color: #aaa; font-size: 0.9em;"><strong>注意：</strong>指引等级的信仰力奖励<em>只评价预判准确度</em>，与信徒是否执行无关。<br>信徒执行程度取决于【职业阻抗】+【性格】+【特质】。</p>
+  </div>
+  <div class="kp-card">
+    <h2>指引等级示例</h2>
+    <p><strong>一级</strong>（三要素均不满足）</p>
+    <blockquote>“哥们儿，最近有点危险，小心行事。” → 模糊笼统，无额外奖励。</blockquote>
+    <p><strong>二级</strong>（地点 + 事件类型）</p>
+    <blockquote>“被选中之人，西南海将有星辰陨落，注意防范。” → 额外信仰力 +20~100点。</blockquote>
+    <p><strong>三级</strong>（时间 + 地点 + 事件类型）</p>
+    <blockquote>“1月之内西南海将有星辰陨落，注意防范，不要前往xxx区域。” → 额外信仰力 +200~400点。</blockquote>
+  </div>
+<div class="kp-card">
+  <h2>指引快速参照表</h2>
+  <p>三要素：时间、地点、末日类型</p>
+  <ul>
+    <li>① 模糊笼统 — 满足0项 → 额外信仰力 +0</li>
+    <li>② 三要素满足两点 → 额外信仰力 +20~100</li>
+    <li>③ 三要素全部具备 → 额外信仰力 +200~400</li>
+  </ul>
+</div>
+</section>
+<section id="kp-toolkit">
+  <div class="kp-card">
+    <h2>KP工具包 · 空白模板</h2>
+  </div>
+  <p>以下为可快速调取使用的空白模板，均可直接复制到QQ或私聊中使用。</p>
+
+  <h2>末日商店模板</h2>
+  <blockquote>
+    <p>首次开团可直接从条款3的末日商店示例中选取三个灾难填充</p>
+  </blockquote>
+  <p>第【X】回合 | 末日商店</p>
+  <p>=======================</p>
+  <br>
+  <p><strong>①〖灾难名称·等级〗</strong></p>
+  <p><strong>类型：</strong>长期/短期 · XX类</p>
+  <p><strong>消耗：</strong>XX点</p>
+  <p><strong>简介：</strong>XXXX</p>
+  <br>
+  <p>——————————————</p>
+  <br>
+  <p><strong>③〖灾难名称·等级〗</strong></p>
+  <p><strong>类型：</strong>长期/短期 · XX类</p>
+  <p><strong>消耗：</strong>XX点</p>
+  <p><strong>简介：</strong>XXXX</p>
+  <br>
+  <p>——————————————</p>
+  <br>
+  <p><strong>④〖灾难名称·等级〗</strong></p>
+  <p><strong>类型：</strong>长期/短期 · XX类</p>
+  <p><strong>消耗：</strong>XX点</p>
+  <p><strong>简介：</strong>XXXX</p>
+  <br>
+  <p>——————————————</p>
+  <br>
+  <p><strong>⑤〖灾难名称·等级〗</strong></p>
+  <p><strong>类型：</strong>长期/短期 · XX类</p>
+  <p><strong>消耗：</strong>XX点</p>
+  <p>——————————————</p>
+
+  <h2>赐福商店模板</h2>
+  <p>（仅在神战DLC启用后使用）</p>
+  <p>1：——————————————</p>
+  <p>2：——————————————</p>
+  <p>3：——————————————</p>
+  <p>4：——————————————</p>
+  <p>5：——————————————</p>
+
+  <h2>角色选择模板</h2>
+  <p><strong>〖职业·名称〗</strong></p>
+  <p>介绍：（角色的职业背景、性格特点、核心优势与风险）</p>
+  <p>——————————————</p>
+  <p><strong>〖职业·名称〗</strong></p>
+  <p>介绍：（角色的职业背景、性格特点、核心优势与风险）</p>
+  <p>——————————————</p>
+  <p><strong>〖职业·名称〗</strong></p>
+  <p>介绍：（角色的职业背景、性格特点、核心优势与风险）</p>
+  <p>——————————————</p>
+
+  <h2>角色空白面板</h2>
+  <pre style="background: #1e1e1e; border: 1px solid #c0392b; border-radius: 8px; padding: 16px; overflow-x: auto; font-family: monospace; color: #e0e0e0;">
+【姓名】
+年龄：
+生命：100  ‖  肢体：健全
+专长：
+手持物：左/右
+职业：
+护甲：
+背包：
+◇║
+◇║
+◇║
+状态:
+信仰类型：
+目标：（角色最想达成的一件事）
+</pre>
+
+  <h2>角色空白面板（神战）</h2>
+  <pre style="background: #1e1e1e; border: 1px solid #c0392b; border-radius: 8px; padding: 16px; overflow-x: auto; font-family: monospace; color: #e0e0e0;">
+【姓名】
+年龄：
+生命：100  ‖  肢体：健全
+专长：
+手持物：左/右
+职业：
+护甲：
+背包：
+◇║
+◇║
+◇║
+状态：
+生命层次：
+信仰类型：
+被赐福数：
+目标：（角色最想达成的一件事）
+</pre>
+
+  <h2>事件模板</h2>
+  <p><strong>〖月份·事件名称〗</strong></p>
+  <p>内容：</p>
+
+  <h2>世界空白面板</h2>
+  <p><strong>名称：</strong>〖〗</p>
+  <p><strong>存活人数：</strong>〖〗</p>
+  <p><strong>文化时代：</strong>〖〗</p>
+  <p><strong>存在势力：</strong>〖〗</p>
+  <p><strong>文明秩序：</strong>〖〗</p>
+  <p><strong>科技程度：</strong>〖〗</p>
+  <p>（文明秩序及所处时代、包括玩家发展势力与本土势力，均可自行决定是否拥有；存活人数可利用AI辅助计算，不必向玩家透露）。</p>
+
+  <h2>势力记录面板</h2>
+  <p><strong>名称：</strong>【】</p>
+  <p><strong>军队数量：</strong>【】</p>
+  <p><strong>影响力：</strong>【】</p>
+  <p><strong>财力：</strong>【】</p>
+  <p><strong>附属组织：</strong>【有/无】</p>
+
+  <h2>跑团记录面板</h2>
+  <pre style="background: #1e1e1e; border: 1px solid #c0392b; border-radius: 16px; padding: 20px; overflow-x: auto; font-family: monospace; color: #e0e0e0; line-height: 1.5;">
+=======================
+回合: [ ]  阶段: [ ]
+世界背景: [ ]  DLC: [ ]
+城镇: [ ]
+=======================
+KP: [ ]
+=======================
+     【玩家A】
+  信徒：[ ]  职业：[ ]
+  状态：[ ]  点数：[ ]
+  第1回合指引精确：[ ]  第2回合：[ ]  第3回合：[ ]  第4回合：[ ]
+=======================
+     【玩家B】
+  信徒：[ ]  职业：[ ]
+  状态：[ ]  点数：[ ]
+  第1回合指引精确：[ ]  第2回合：[ ]  第3回合：[ ]  第4回合：[ ]
+=======================
+      【世界势力】
+  教会：[ ]  平民：[ ]  军队：[ ]  备注：[ ]
+=======================
+【当前活跃灾难记录】
+① [ ] 地点：[ ]  已持续：[ ] 回合  等级：[ ]
+② [ ] 地点：[ ]  已持续：[ ] 回合  等级：[ ]
+③ [ ] 地点：[ ]  已持续：[ ] 回合  等级：[ ]
+=======================
+      【城镇状态】
+  人口：[ ]
+  卫生状态：[ ]
+  防守力量：[ ]
+  粮食储备：[ ]
+=======================
+</pre>
+</section>
+<section id="lazy-tools">
+  <div class="kp-card">
+    <h2>角色状态</h2>
+  </div>
+  <p><em>以下内容为裁决者具体参考项</em></p>
+
+  <h3>① 信徒状态描述词</h3>
+  <p><strong>生理状态</strong>（健康-重伤链）</p>
+  <div style="display: flex; flex-wrap: wrap; gap: 8px; margin: 12px 0;">
+    <span style="background:#2a2a2a; color:#e63946; border:1px solid #c0392b; padding:4px 12px; border-radius:20px;">健康</span>
+    <span style="background:#2a2a2a; color:#e63946; border:1px solid #c0392b; padding:4px 12px; border-radius:20px;">精力充沛</span>
+    <span style="background:#2a2a2a; color:#e63946; border:1px solid #c0392b; padding:4px 12px; border-radius:20px;">轻微擦伤</span>
+    <span style="background:#2a2a2a; color:#e63946; border:1px solid #c0392b; padding:4px 12px; border-radius:20px;">疲惫</span>
+    <span style="background:#2a2a2a; color:#e63946; border:1px solid #c0392b; padding:4px 12px; border-radius:20px;">风寒</span>
+    <span style="background:#2a2a2a; color:#e63946; border:1px solid #c0392b; padding:4px 12px; border-radius:20px;">轻伤</span>
+    <span style="background:#2a2a2a; color:#e63946; border:1px solid #c0392b; padding:4px 12px; border-radius:20px;">中度伤</span>
+    <span style="background:#2a2a2a; color:#e63946; border:1px solid #c0392b; padding:4px 12px; border-radius:20px;">高烧</span>
+    <span style="background:#2a2a2a; color:#e63946; border:1px solid #c0392b; padding:4px 12px; border-radius:20px;">骨折</span>
+    <span style="background:#2a2a2a; color:#e63946; border:1px solid #c0392b; padding:4px 12px; border-radius:20px;">重伤</span>
+    <span style="background:#2a2a2a; color:#e63946; border:1px solid #c0392b; padding:4px 12px; border-radius:20px;">奄奄一息</span>
+    <span style="background:#2a2a2a; color:#e63946; border:1px solid #c0392b; padding:4px 12px; border-radius:20px;">濒死</span>
+    <span style="background:#2a2a2a; color:#e63946; border:1px solid #c0392b; padding:4px 12px; border-radius:20px;">昏迷</span>
+    <span style="background:#2a2a2a; color:#e63946; border:1px solid #c0392b; padding:4px 12px; border-radius:20px;">死亡</span>
+  </div>
+
+  <p><strong>临时状态</strong>（短期影响，可快速恢复）</p>
+  <div style="display: flex; flex-wrap: wrap; gap: 8px; margin: 12px 0;">
+    <span style="background:#2a2a2a; color:#e63946; border:1px solid #c0392b; padding:4px 12px; border-radius:20px;">饥饿</span>
+    <span style="background:#2a2a2a; color:#e63946; border:1px solid #c0392b; padding:4px 12px; border-radius:20px;">流血</span>
+    <span style="background:#2a2a2a; color:#e63946; border:1px solid #c0392b; padding:4px 12px; border-radius:20px;">口渴</span>
+    <span style="background:#2a2a2a; color:#e63946; border:1px solid #c0392b; padding:4px 12px; border-radius:20px;">恐慌</span>
+    <span style="background:#2a2a2a; color:#e63946; border:1px solid #c0392b; padding:4px 12px; border-radius:20px;">幻觉</span>
+  </div>
+
+  <p><strong>长期状态</strong>（慢性/心理性，需休整或治疗）</p>
+  <div style="display: flex; flex-wrap: wrap; gap: 8px; margin: 12px 0;">
+    <span style="background:#2a2a2a; color:#e63946; border:1px solid #c0392b; padding:4px 12px; border-radius:20px;">抑郁</span>
+    <span style="background:#2a2a2a; color:#e63946; border:1px solid #c0392b; padding:4px 12px; border-radius:20px;">疯狂</span>
+    <span style="background:#2a2a2a; color:#e63946; border:1px solid #c0392b; padding:4px 12px; border-radius:20px;">精神衰弱</span>
+    <span style="background:#2a2a2a; color:#e63946; border:1px solid #c0392b; padding:4px 12px; border-radius:20px;">创伤后应激</span>
+    <span style="background:#2a2a2a; color:#e63946; border:1px solid #c0392b; padding:4px 12px; border-radius:20px;">偏执</span>
+    <span style="background:#2a2a2a; color:#e63946; border:1px solid #c0392b; padding:4px 12px; border-radius:20px;">色瘾</span>
+    <span style="background:#2a2a2a; color:#e63946; border:1px solid #c0392b; padding:4px 12px; border-radius:20px;">药物上瘾</span>
+    <span style="background:#2a2a2a; color:#e63946; border:1px solid #c0392b; padding:4px 12px; border-radius:20px;">残疾</span>
+    <span style="background:#2a2a2a; color:#e63946; border:1px solid #c0392b; padding:4px 12px; border-radius:20px;">焦虑</span>
+  </div>
+  <p>KP（裁决者）在反馈与决策记录中直接使用此词即可<br>1-2回合，长期状态需特定事件或治疗才能解除。</p>
+
+  <h3>② 状态变化参考</h3>
+  <p><strong>链：</strong> 健康 → 轻伤 → 重伤 → 濒死 → 死亡</p>
+  <p>遭遇一次严重打击（被砍、房屋倒塌、瘟疫高烧、连续一星期吃不饱等），状态下降一级。</p>
+  <p>休整一整个月并接受专业治疗或神迹赐福，状态提升一级。</p>
+</section>
+<section id="town-table">
+  <div class="kp-card">
+    <h2>初始城镇状态表</h2>
+  </div>
+  <p>（可选择是否发给玩家）</p>
+  <table>
+    <tr><th colspan="2">【名称】</th></tr>
+    <tr><td colspan="2">（填入城镇或据点名称）</td></tr>
+    <tr><th>〖人口〗</th><td>xxx</td></tr>
+    <tr><td colspan="2">（人口总数，可影响劳动力、征兵上限、瘟疫扩散速度等）</td></tr>
+    <tr><th>〖卫生状态〗</th><td>极差 / 差 / 中等 / 极好</td></tr>
+    <tr><td colspan="2">（影响瘟疫类灾难的爆发概率与扩散速度）</td></tr>
+    <tr><th>〖防守力量〗</th><td>空虚 / 正常 / 严密</td></tr>
+    <tr><td colspan="2">（影响战争类灾难的抵抗能力与敌军入侵成功率）</td></tr>
+    <tr><th>〖粮食储备〗</th><td>空虚 / 正常 / 充盈</td></tr>
+    <tr><td colspan="2">（影响饥荒类灾难的承受能力与民众稳定度）</td></tr>
+  </table>
+</section>
+<section id="portable-tools">
+  <div class="kp-card">
+    <h2>便携工具</h2>
+  </div>
+  <p>以下为跑团过程中可用的快捷工具链接，均可直接复制使用</p>
+  <ul>
+    <li><strong>AI工具：</strong><a href=https://www.guangyapan.com/s/1922538307223093330_afKBeeS_zVounNgZ>点击下载</a>如想减轻压力/单人游玩强烈推荐使用</li>
+    <li><strong>制图软件：</strong><a href="https://pan.quark.cn/s/036a0db12f8c" target="_blank">点击下载</a>（制作跑团地图或势力分布图）</li>
+    <li><strong>地图快速生成演示：</strong><a href="https://b23.tv/zp27LlK" target="_blank">点击查看</a>（B站视频教程）</li>
+    <li><strong>DeepSeek 网页版：</strong><a href="https://chat.deepseek.com" target="_blank">点击打开</a>（AI辅助推演与文案生成）</li>
+  </ul>
+  <p>若链接无效请添加QQ号：551814605</p>
+</section>
+<style>
+  @media (max-width: 768px) {
+    .guide-ref-table, .guide-ref-table thead, .guide-ref-table tbody, .guide-ref-table th, .guide-ref-table td, .guide-ref-table tr { display: block; }
+    .guide-ref-table thead tr { display: none; }
+    .guide-ref-table tr {
+      margin-bottom: 15px;
+      border: 1px solid #c0392b;      /* 红色边框 */
+      padding: 10px;
+      background: #1e1e1e;            /* 深色背景 */
+    }
+    .guide-ref-table td {
+      border: none;
+      padding: 4px 0;
+      color: #e0e0e0;                /* 浅灰文字 */
+    }
+    .guide-ref-table td:first-child {
+      font-size: 1.1em;
+      font-weight: bold;
+      color: #e63946;                /* 红色强调 */
+    }
+  }
+</style>
+<section id="demo-round">
+  <div class="kp-card">
+    <h2 id="demo-top">游戏范本</h2>
+  </div>
+  <blockquote style="background: #f9f9f9; border-left: 3px solid #3498db; padding: 12px 18px; margin-bottom: 20px;">
+    <p><strong>小提示：</strong>正常对局中不必记录如此详细
+    包括灾难演动，世界状态，等都为记录的可选项
+    以下内容只是希望各位KP能更好理解跑团流程过程所做的额外详细记录。</p>
+  </blockquote>
+  <blockquote style="background: #f9f9f9; border-left: 3px solid #3498db; padding: 16px 18px; margin-bottom: 16px;">
+    <p><strong>KP工具箱：新手范例使用说明</strong></p>
+    <p>新手KP可参照以下结构进行每一回合的记录：</p>
+    <ul>
+      <li>① 更新跑团记录面板（回合数、阶段、城镇信息、势力状态）</li>
+      <li>② 更新信徒状态、点数与指引精确度</li>
+      <li>③ 发放末日商店 → 玩家选择末日 → 记录选择理由与点数变动</li>
+      <li>④ 分析灾难等级联动（演化+单人投放+双人叠加的叠加机制）</li>
+      <li>⑤ 收取玩家指引 → 按指引等级判定表裁决 → 记录接受程度</li>
+      <li>⑥ 撰写角色反馈（含真人向反应描写）</li>
+      <li>⑦ 撰写事件（每月一条，公屏发布）</li>
+      <li>⑧ 分析事件关键节点对各玩家的影响</li>
+      <li>⑨ 结算点数变动 → 评估信徒信仰状态 → 更新灾难演变追踪</li>
+    </ul>
+    <p>所有模板（末日商店、指引判定）均可在「KP工具包」章节中找到。</p>
+  </blockquote>
+  <p><strong>KP：</strong>秦月</p>
+  <p><strong>玩家A「柠檬茶」：</strong>〖女巫·秦川南〗（随军吟游诗人，男）</p>
+  <p><strong>玩家B「卡洛西」：</strong>〖女巫·秦羽〗（军队军医，女）</p>
+  <p><strong>背景：</strong>中世纪 | DLC：未启用 | 城镇：克尔赫拉斯·帝国边境军事堡垒</p>
+  <h2>第1回合 · 完整演示</h2>
+    <h3>跑团记录面板</h3>
+    <pre>回合: 1    阶段: 潜伏期
+背景: 中世纪    DLC: 未启用
+城镇: 克尔赫拉斯·帝国边境军事堡垒
+KP: 秦月</pre>
+
+    <h3>信徒状态</h3>
+    <pre>柠檬茶 | 秦川南 | 女巫/江湖术士 | 随军吟游诗人（男） | 刚挖到钱袋，对指引半信半疑 | 100点
+卡洛西 | 秦羽   | 女巫/医者     | 军队军医（女）     | 梦醒后得到神启，决定再次转移 | 200点</pre>
+
+    <h3>势力</h3>
+    <pre>教会状态：正常运作·神祭筹备中
+平民状态：正常
+军队状态：帝国边军·两人均混迹其中
+备注：秦川南跟随哈利挖宝，秦羽为士兵疗伤</pre>
+
+    <h3>当前活跃灾难</h3>
+    <pre>① 神祭 | 克尔赫拉斯教会 | 已持续 1 回合 | 一级·短期
+② 宗教与王权 | 帝国全境 | 已持续 1 回合 | 一级</pre>
+
+    <h3>末日选择记录</h3>
+    <pre>柠檬茶：①恶魔 ②洪灾 ③异端 ④宗教与王权 ⑤神祭
+→ 选择 ⑤神祭·一级（短期·神秘类，100点）
+   理由：教会大搞祭祀之时会有混乱场景，可趁机获利
+   点数：初始200 → 投放神祭-100 → 剩余100点
+
+卡洛西：①黑死病 ②战乱 ③蝗灾 ④宗教与王权 ⑤神祭
+→ 选择 ④宗教与王权·一级（长期·文化类，100点）
+   理由：借教会和王室加税引发民众不满，为后续革命埋下伏笔
+   点数：初始200 → 投放宗教与王权-100 → 剩余100点 → 指引精确+100 → 最终200点</pre>
+
+    <h3>灾难等级联动详解</h3>
+    <pre>无等级变动本轮为初始投放回合，神祭和宗教与王权均从一级起步</pre>
+
+    <h3>指引记录</h3>
+    <blockquote>
+      <p><strong>柠檬茶：</strong></p>
+      <p>"有趣，这性子倒是分外合适，那就你了"</p>
+      <p>"教会的神迹之日，搞祭祀之时，会有混乱的场景，靠着你的本事去获利吧"</p>
+      <p>"现在你是我的眷者了，为我累计信徒，但要当心其他的眷属，也在暗中活动，不要被他发现了"</p>
+      <p>"广积粮缓称王，如果你人成则可得道成仙，长生久世，大道有望，可成为我等同道"</p>
+      <p>"不过这祭祀之日倒是会发生有趣的事，你可去看看"</p>
+      <p><strong>指引等级判定：</strong>二级（有具体事件"神迹之日/祭祀"，但大体模糊）</p>
+      <p><strong>KP判定结果：</strong>指引被信徒部分接受秦川南对神明存在半信半疑，决定先挖宝快活，祭祀的事"到时候再说"</p>
+    </blockquote>
+    <blockquote>
+      <p><strong>卡洛西（直接脑海里说）：</strong></p>
+      <p>"孩子啊，不必惊恐于声音由何而来你寻姐的意志感动了上天，但你劫难将至，我下来引导你避劫难"</p>
+      <p>"因天衍四九，遁其一大劫将起纵仙神以可观之生变吾言之数句，汝牢记之"</p>
+      <p>"此方之王廷贪婪之气逐日剧增，治下税赋将增"</p>
+      <p>"水患不日亦至天将降炎火于人之居，世人盲目以猎巫为信，瘟患之苗已生"</p>
+      <p><strong>指引等级判定：</strong>三级（有具体时间暗示、具体事件"税赋将增/猎巫/瘟疫"）</p>
+      <p><strong>KP判定结果：</strong>指引精确，奖励100点信仰点数秦羽完全相信神启，决定立即转移</p>
+    </blockquote>
+    
+<h3>角色反馈记录</h3>
+<p><strong>柠檬茶·信徒反馈：</strong></p>
+<p>"嗯……？"</p>
+<p>夜晚，正在跟哈利挖宝的秦川听到耳边突然响起的声音，狐疑的向四周看了一眼</p>
+<p>"怎么了？"一旁还在卖力挖土的哈利见秦川四处张望，也跟着看了过去</p>
+<p>"哦，没事，继续挖吧"</p>
+<p>【该不会真的有神仙吧，罗贯中写的是真的？不过祭祀……到时候再说】</p>
+<p>不久后，两人挖出了那个钱袋，里面是满满一袋子铜币好好快活了一阵</p>
+<p><strong>KP记录：</strong>秦川南对指引持半信半疑态度，优先选择眼前利益（挖宝快活），将指引中的"祭祀之日"搁置观望</p>
+
+<p><strong>卡洛西·信徒反馈：</strong></p>
+<p>"……?"</p>
+<p>秦羽从床上迷迷糊糊的苏醒</p>
+<p>床旁的烛火还在微微摇曳，窗外的星辰高悬</p>
+<p>回忆着梦的内容：【这……神仙？】</p>
+<p>她刚想接着躺下，结果脑海里就响起了声音，面容也跟着越来越复杂</p>
+<p>"这……那看来我又得溜了"</p>
+<p><strong>KP记录：</strong>秦羽经历双重神启（梦境+脑海中直接响起声音），完全接受指引，但当前被困于军营（许进不许出），转移计划需后续执行秦羽当前身份为军队军医</p>
+
+<h3>事件</h3>
+<blockquote>
+  <p><strong>〖第1个月·神祭〗</strong></p>
+  <p>10年一度的神迹之日到来，帝国的人们纷纷自发的走上街头，为神明欢送</p>
+  <p>教堂里几乎都挤满了人，孩童欢笑着，人们的笑容挂在脸上</p>
+  <p>这本来是应该开心的日子</p>
+  <p>如果没有坠尸的话</p>
+  <p>砰的一声，从教堂钟楼上，猛的摔下来了什么东西，砸在了其中一个路人身上</p>
+  <p>鲜血、粪便，各种器官几乎撒了一地</p>
+  <p>然后是第1个，第2个，第3个</p>
+  <p>原本欢呼的人群一滞，随后是浪潮一般的惊呼"杀人了！"</p>
+  <p>人们慌乱的奔走着，将其他人踩在脚下，卫兵们试图维护秩序，但根本挡不住暴乱的民众</p>
+</blockquote>
+<blockquote>
+  <p><strong>〖第2个月·凶手落幕〗</strong></p>
+  <p>神祭被迫终止，但追查很快就有了结果</p>
+  <p>邪恶的异教徒们趁乱混入了教会之中，将几名修女残忍杀害，随后从钟楼抛下</p>
+  <p>这是对我神赤裸裸的挑衅，绝对不能容忍</p>
+  <p>于是几位凶手，几乎就在第2天被拉上了火刑架，被圣火焚烧而死</p>
+  <p>这件事情也就不了了之了</p>
+  <p>至于为什么异教徒能混入大教堂？</p>
+  <p>没人在乎，反正教会说是异教徒，难不成你还能反驳？</p>
+</blockquote>
+<blockquote>
+  <p><strong>〖第3个月·税收〗</strong></p>
+  <p>"为了让我神息怒，为了惩治异教徒，我们需要上交自己纯洁的灵魂与祭品……"</p>
+  <p>"当然你们也可以让我神宽恕，只需要……"</p>
+  <p>教会颁布了额外三项税令</p>
+  <p>当然，是纯自愿的，毕竟我神虔诚的信徒，确实应该赢得宽恕</p>
+  <p>至于如果不是教会信徒该怎么办？</p>
+  <p>这不就是异教徒吗？</p>
+</blockquote>
+    <blockquote>
+      <p><strong>〖第4个月·王室法令〗</strong></p>
+      <p>借着教会的行动，王室也额外增加了税收，治安税，安定税</p>
+      <p>人们苦不堪言，不过好消息是巡逻的卫兵多了，治安还算好一点</p>
+      <p>一个市民这么安慰着自己，交上了自己应该交的孝敬钱，灰溜溜的跑回了家</p>
+    </blockquote>
+    <blockquote>
+      <p><strong>〖第5个月·积累〗</strong></p>
+      <p>"这样下去什么时候是个头啊"一个在河边洗衣的妇女抱怨着</p>
+      <p>"谁知道呢，我们家刚刚把最后一点余粮都交上去了，只能勒紧裤腰带喽"</p>
+      <p>"唉……"</p>
+    </blockquote>
+    <blockquote>
+      <p><strong>〖第6个月·自欺欺人〗</strong></p>
+      <p>教会制作了木质神像，向信徒自愿推销</p>
+      <p>但是人们已经没钱了</p>
+      <p>于是那些信仰不诚的信徒就被判定为了异教徒，上了火刑架</p>
+      <p>"这tmd……"一个中年人见证了异教徒被净化之后，回到自己的家中，将锄头放下</p>
+      <p>暗骂了一句："这样下去迟早得死"</p>
+      <p>毕竟那位异教徒也是他的好友</p>
+    </blockquote>
+
+    <h3>事件关键节点分析</h3>
+    <pre>◆ 神祭坠尸事件：教会将修女之死嫁祸给异教徒，借机开启宗教高压3具坠尸引发了远超事件本身的社会连锁反应，教会的解释漏洞百出（异教徒如何混入教会？），但无人敢公开质疑
+◆ 税收连锁反应：教会率先加税，王室跟进中世纪双王权结构在灾难面前不是互相制衡，而是轮流压榨神像推销（第6个月）进一步掏空了平民和士兵的钱袋
+◆ 异教徒审判苗头：第6个月好友被烧死的中年人为后续革命情绪提供了微观注脚秦川南和秦羽此刻都在军队中目睹这一切</pre>
+
+    <h3>指引精确度</h3>
+    <pre>柠檬茶：否（指引模糊）
+卡洛西：是（预判税赋将增·+100点）</pre>
+
+    <h3>信徒信仰状态评估</h3>
+    <pre>秦川南：半信半疑优先选择眼前利益（挖宝），对指引者的存在持"该不会真的有神仙吧"的观望态度对指引中的"祭祀之日"暂时搁置
+秦羽：完全信仰经历梦境与脑海中声音双重神启后，已接受指引者存在当前受困于军营，但已决定"又得溜了"，信仰已转化为行动意愿</pre>
+
+    <h3>灾难演变追踪</h3>
+    <pre>神祭（柠檬茶投放·短期·已持续1回合）：第1-2个月坠尸事件爆发，第3-6个月教会借机扩权征税推销神像短期事件的冲击力正在沉淀为长期社会压力
+宗教与王权（卡洛西投放·长期·已持续1回合）：第3个月教会率先加税，第4个月王室跟进，第6个月神像推销民间怨声载道，为后续革命埋下伏笔</pre>
+          <h2>第2回合 · 完整演示</h2>
+
+    <h3>记录面板</h3>
+    <pre>回合: 2    阶段: 潜伏期→爆发过渡
+城镇: 克尔赫拉斯·帝国边境军事堡垒</pre>
+
+    <h3>信徒状态</h3>
+    <pre>柠檬茶 | 秦川南 | 女巫/江湖术士 | 随军吟游诗人（男） | 传道失败·目睹牲畜瘟疫·内心不安 | 100点
+卡洛西 | 秦羽   | 女巫/医者     | 军队军医（女）     | 过度劳累·被拉去当临时兽医           | 300点</pre>
+
+    <h3>指引精确度</h3>
+    <pre>柠檬茶：第1回合 否（模糊） / 第2回合 否（模糊）
+卡洛西：第1回合 是（+100） / 第2回合 是（+100）</pre>
+
+    <h3>势力</h3>
+    <pre>教会状态：借神祭扩权·强卖神像
+平民状态：苦不堪言·革命与异端流言苗头
+军队状态：许进不许出·军饷被神像掏空
+备注：战马大规模死亡，医者会介入焚烧尸体</pre>
+
+    <h3>当前活跃灾难</h3>
+    <pre>① 神祭 | 克尔赫拉斯教会 | 已持续 2 回合 | 一级·短期
+② 宗教与王权 | 帝国全境 | 已持续 2 回合 | 二级
+③ 思想变迁 | 民间 | 已持续 1 回合 | 一级（柠檬茶第2回合新投）
+④ 革命 | 帝国全境 | 已持续 1 回合 | 一级（卡洛西第2回合新投）</pre>
+
+    <h3>末日选择记录</h3>
+    <pre>柠檬茶：①圣战·一级 ②思想变迁·一级 ③革命·一级 ④地震·X级 ⑤猎巫·一级
+→ 选择 ②思想变迁·一级（长期·文化类，100点）
+   理由：高压之下民众会自发组织地下议会，可参与并借机传道
+   点数：上回合剩余100 → 第2回合固定+100 → 投放思想变迁-100 → 剩余100点
+
+卡洛西：①黑死病·一级 ②战乱·一级 ③革命·一级 ④宗教分裂·一级 ⑤猎巫·一级
+→ 选择 ③革命·一级（长期·人祸类，100点）
+   理由：加税已压得各地市民没活路，革命只是时间问题
+   点数：上回合剩余200 → 第2回合固定+100 → 投放革命-100 → 剩余200点 → 指引精确+100 → 最终300点</pre>
+
+    <h3>指引记录</h3>
+    <blockquote>
+      <p><strong>柠檬茶：</strong></p>
+      <p>"有意思，这么负重的税收看起来要压得所有的民众喘不过气来了"</p>
+      <p>"你所在的地方应该也会出现不少的集会或者议会，你可以去参与一下，或许会有意想不到的收获"</p>
+      <p>"反正你也知道我是真实存在的了，不是吗？"</p>
+      <p>"也可以借此稍稍的传播一下，就当增加潜在的道友了"</p>
+      <p><strong>指引等级判定：</strong>二级（有具体方向"参与集会/传道"，但时间地点模糊）</p>
+      <p><strong>KP判定结果：</strong>指引被信徒接受，但具体行动尚未反馈</p>
+    </blockquote>
+    <blockquote>
+      <p><strong>卡洛西：</strong></p>
+      <p>"然而，孩子啊，不必担忧"</p>
+      <p>"凡是暴政，都意味着王朝将走向末路"</p>
+      <p>"然而，我见那血光冲天，刀兵将再起于世间，瘟疫亦将与之随行，小心吧"</p>
+      <p><strong>指引等级判定：</strong>三级（预判"刀兵再起"与"瘟疫随行"）</p>
+      <p><strong>KP判定结果：</strong>指引精确预判内容与第11-12个月的战马瘟疫事件高度吻合，额外奖励100点信仰点数</p>
+    </blockquote>
+    
+<h3>角色反馈记录</h3>
+<p><strong>柠檬茶·信徒反馈：</strong></p>
+<p>"兄弟，这算好的了，好歹我们不用收税，还有补贴"</p>
+<p>秦川拍了拍对方的肩，指了指自己胸口挂的小神像</p>
+<p>"你也不想上火刑架吧……"</p>
+<p>"主要是这也太贵了，500铜币啊，几乎是我一个多月的军饷，早知道少喝一顿酒了"</p>
+<p>哈利叹了口气看着自己胸口挂的破玩意儿</p>
+<p>"他又不能替我挡刀子……"</p>
+<p>秦川挑了挑眉，看着哈利</p>
+<p>"唉，别这么说，万一真的有神呢我跟你讲，之前我们在挖宝的时候，我听见……"</p>
+<p>听见秦川这番话，哈利明显有点懵，狐疑的打量着秦川</p>
+<p>"啊，真的啊？你老小子不能骗我吧？"</p>
+<p>秦川拍了拍对方的肩</p>
+<p>"我骗你干嘛，哎呀，反正信了又没坏处，买都买了"</p>
+<p><strong>KP记录：</strong>秦川南开始向士兵试探性地传播神启经历他借神像推销的契机向哈利暗示自己的神秘经历，但哈利的反应是"狐疑"传播效果微弱，仅停留在闲聊层面，尚未进入有组织的传道</p>
+
+<p><strong>卡洛西·信徒反馈：</strong></p>
+<p>"你妈了个"</p>
+<p>秦羽回到帐篷后，将这破木质神像一脚踹翻</p>
+<p>自己原本想离开这破地方，结果发现这地方竟然只许进不许出</p>
+<p>而且教会的传教士还他妈给自己推销这破神像，足足500铜币，是他一个月的工资</p>
+<p>"秦医生，长官叫你！"</p>
+<p>听到呼喊，秦羽迅速将神像捡起挂在腰上，脸上挂上了一抹熟悉的笑容，走出帐篷</p>
+<p>"哦，来了来了"</p>
+<p>走在路上，脑子里又响起了熟悉的声音</p>
+<p>秦羽默默的点了点头，来到了城中养马的牧场</p>
+<p>见人到来，长官迎了上去</p>
+<p>"秦小姐，帮忙看看这些牲畜是什么情况？他们有点病殃殃的"</p>
+<p>秦羽走进马棚，看了一圈</p>
+<p>这下坏了，她又不是兽医</p>
+<p><strong>KP记录：</strong>秦羽对教会推销神像极为不满，但被迫购买被困军营无法脱身她被临时拉去检查牲畜病情，面临身份困境——她是军医而非兽医牲畜病状与指引者预判的"瘟疫亦将与之随行"高度吻合，但秦羽缺乏兽医技能，导致完全无计可施</p>
+
+<h3>事件</h3>
+<blockquote>
+  <p><strong>〖第7个月·安宁〗</strong></p>
+  <p>虽然民众苦不堪言，但帝国少见的迎来了安宁</p>
+  <p>那么代价又是什么呢？</p>
+  <p>没人知道……</p>
+</blockquote>
+<blockquote>
+  <p><strong>〖第8个月·偷窃？〗</strong></p>
+  <p>帝国法尔斯镇，一伙民众被押上了刑场，因接近军备库而被处死</p>
+  <p>鲜血洒了周围围观的路人一身</p>
+  <p>人们开始流传"这定是恶魔所为，教会背弃了神明"之类的话语</p>
+  <p>但规模并不大</p>
+</blockquote>
+<blockquote>
+  <p><strong>〖第9个月·袭击〗</strong></p>
+  <p>帝国村镇境内发生了一起小规模的袭击事件</p>
+  <p>一伙暴民袭击了村中的兵器库，取得了武器</p>
+  <p>目前当地领主已派兵镇压</p>
+</blockquote>
+<blockquote>
+  <p><strong>〖第10个月·流言〗</strong></p>
+  <p>随着种种怪事的发生，有民众开始宣称，自己见到了硕大的触手，在梦中袭击他人</p>
+  <p>但没人相信</p>
+  <p>教会为了净化这位受苦的信徒，将其请入了教堂之中</p>
+  <p>但从此再也没有人见过这个人了</p>
+</blockquote>
+<blockquote>
+  <p><strong>〖第11个月·瘟疫？〗</strong></p>
+  <p>克尔赫拉斯城，这座帝国边境屹立了千年的军事堡垒，最近好像有点不太平</p>
+  <p>本来精心保养呵护的战马，大批大批的死亡</p>
+  <p>军医推断是瘟疫行为，要将动物隔离</p>
+  <p>此举引起了帝国高度重视，毕竟如果传染到人身上，这可不是小事</p>
+</blockquote>
+<blockquote>
+  <p><strong>〖第12个月·医者会〗</strong></p>
+  <p>随着皇家医者们的到场，人们终于大概搞清了病因，但愿吧</p>
+  <p>大批大批的动物尸体被烧毁</p>
+  <p>一股黑烟几乎顺着风飘向了山下……</p>
+</blockquote>
+
+    <h3>事件关键节点分析</h3>
+    <pre>◆ 革命萌芽：第8个月的军备库接近事件和第9个月的兵器库袭击，是革命从情绪转化为行动的标志性事件此时革命尚处于"小规模、可镇压"阶段
+◆ 流言与异端：第10个月的"触手梦境"流言与教会的净化手段（带走后再无音讯），为后续异教徒灾难提供了生长土壤教会越压制，流言越传播
+◆ 牲畜瘟疫爆发：第11-12个月战马大规模死亡，与卡洛西第2回合指引的"瘟疫亦将与之随行"高度吻合秦羽被临时拉去当兽医，但她缺乏相关技能，这一困境将影响后续瘟疫控制</pre>
+
+    <h3>点数变动汇总</h3>
+    <pre>柠檬茶：上回合剩余100 → 第2回合固定+100 → 投放思想变迁-100 → 剩余100点
+卡洛西：上回合剩余200 → 第2回合固定+100 → 投放革命-100 → 剩余200点 → 指引精确奖励+100 → 最终300点</pre>
+
+    <h3>信徒信仰状态评估</h3>
+    <pre>秦川南：信仰正在确立他开始向士兵传播神启经历，虽然收效甚微，但行为本身标志着从"半信半疑"到"尝试传播"的转变
+秦羽：信仰已完全确立对指引者的预判深信不疑，但被困军营且面临不擅长的兽医任务，精神压力与日俱增指引准确验证提升了忠诚度，但身体消耗也在同步增加</pre>
+
+    <h3>灾难演变追踪</h3>
+    <pre>神祭（已持续2回合·短期）：坠尸事件后教会借机扩权第6个月神像推销将短期事件的影响沉淀为长期社会压力
+宗教与王权（已持续2回合·升级至二级）：演化推升第3-6个月教会与王室先后加税，第6个月异教徒审判开始民间愤怒已在积累
+思想变迁（柠檬茶新投·第2回合第1个月）：高压下民众开始思考"怎么办"，地下议会萌芽与秦川南的传道方向一致
+革命（卡洛西新投·第2回合第1个月）：第8-9个月军备库接近和兵器库袭击，革命从情绪转化为行动但仍在初期阶段，如果此时镇压还来得及，可惜没人在乎，这就是贵族的傲慢了</pre>
+    <h2>第3回合 · 完整演示</h2>
+
+       <h3>记录面板</h3>
+    <pre>回合: 3    阶段: 爆发期
+城镇: 克尔赫拉斯·帝国边境军事堡垒</pre>
+
+    <h3>信徒状态</h3>
+    <pre>柠檬茶 | 秦川南 | 女巫/江湖术士 | 随军吟游诗人（男） | 被困要塞·传道失败·向神求助得到教义方案 | 0点
+卡洛西 | 秦羽   | 女巫/医者     | 军队军医（女）     | 过度劳累·连续数月无休·神谕暂停接收           | 200点</pre>
+
+    <h3>指引精确度</h3>
+    <pre>柠檬茶：第1回合 否（模糊） / 第2回合 否（模糊） / 第3回合 否（理论精确·受困无法执行）
+卡洛西：第1回合 是（+100） / 第2回合 是（+100） / 第3回合 否（宏观准确·劳累无法接收）</pre>
+
+    <h3>势力</h3>
+    <pre>教会状态：权威严重动摇·神像被叛乱民众推翻
+平民状态：革命全面爆发后一度被重骑兵击溃·但商会与佣兵团仍在暗中支持
+军队状态：帝国近卫军·国防军·宗教骑士团联合镇压叛乱
+周边国家：乐于见到帝国内乱·向起义军输送军备与资金
+备注：克尔赫拉斯驻军部分调离参与镇压·要塞管控驻军被搬空</pre>
+    <h3>当前活跃灾难</h3>
+    <pre>① 神祭 | 克尔赫拉斯教会 | 已持续 2 回合 | 一级·短期·已沉淀
+② 宗教与王权 | 帝国全境 | 已持续 3 回合 | 二级
+③ 思想变迁 | 民间 | 已持续 2 回合 | 三级（锁定延续）
+④ 革命 | 帝国全境 | 已持续 2 回合 | 四级·特大灾难
+⑤ 马瘟/牲畜瘟疫 | 克尔赫拉斯及周边 | 已持续 1 回合 | 一级
+⑥ 异教徒 | 各地民间 | 已持续 1 回合 | 一级（柠檬茶第3回合新投）
+⑦ 农奴=黑奴 | 各地领主领地 | 已持续 1 回合 | 一级（卡洛西第3回合新投）</pre>
+
+    <h3>末日选择记录</h3>
+    <pre>双方末日商店（本次内容相同）：①思想变迁·二级 ②革命·二级 ③马温·二级 ④农奴=黑奴·一级 ⑤异教徒·一级
+
+柠檬茶：
+→ 选择 ②革命·二级（200点）+ ⑤异教徒·一级（100点）
+   锁定：思想变迁（延续至第4回合）
+   理由：革命愈演愈烈，需继续火上浇油；同时利用教会失信于人的时机，让异教徒涌现以动摇信仰根基
+   点数：上回合剩余100 → 第3回合固定+100 → 投放革命二级-200 → 投放异教徒一级-100 → 当前0点
+
+卡洛西：
+→ 选择 ②革命·二级（200点）+ ④农奴=黑奴·一级（100点）
+   理由：继续加码革命浪潮；同时让领主对农奴的压榨进一步加剧，从底层撕裂社会结构
+   点数：上回合剩余300 → 第3回合固定+100 → 投放革命二级-200 → 投放农奴一级-100 → 当前200点</pre>
+
+    <h3>灾难等级联动详解</h3>
+    <pre>【革命·四级】精确追溯：
+第一步（自行演化）：第1回合卡洛西投放〖宗教与王权·一级〗→教会与王室双重加税引发民间不满→第9个月暴民袭击村镇兵器库→自行演化出革命苗头（一级）
+第二步（卡洛西单人投放）：第2回合卡洛西投放〖革命·一级〗→革命升至二级→第13个月民众冲击武备库
+第三步（双人叠加投放）：第3回合柠檬茶投〖革命·二级〗+卡洛西投〖革命·二级〗→同类灾难双人叠加→革命跃升至三级→第14个月各地揭竿而起，神像被推翻
+第四步（演化推升）：第16个月商会+佣兵团倒向起义军+周边国家输送军备→自身演化推升一级→革命升至四级·特大灾难
+
+【思想变迁·三级】：第2回合柠檬茶投放一级 → 第3回合锁定延续 → 第13个月革命口号与神像被推翻标志着新思想从地下暗流变为公开呐喊，演化推升至三级
+
+【宗教与王权·二级】：第1回合卡洛西投放一级 → 第3-6个月教会与王室加税 → 演化推升至二级当前持续3回合，已达基础规则中灾难持续上限，若无再次加码将进入衰退或变异阶段</pre>
+
+<h3>指引记录</h3>
+<blockquote>
+  <p><strong>柠檬茶：</strong></p>
+  <p>"这个国家的问题越来越尖锐，已经有王朝末年的景象了"</p>
+  <p>"还记得秦朝时候的事吧？很快就会有很多的起义和动乱了"</p>
+  <p>"同时，教会也会不被人信任，这是发展的好时机，去吧"</p>
+  <p>"可以准备两套教义"</p>
+  <p>"一套向外传播，一套是真正的核心，由他们为我提供信仰之力，而核心则是躲在暗面之下"</p>
+  <p>"他们的上帝说爱世人，却允许瘟疫横行"</p>
+  <p>"真正的神说适者生存，至少他不撒谎"</p>
+  <p><strong>补充教义框架：</strong></p>
+  <p>如果上帝全能全善，为何有瘟疫、战争、黑死病？</p>
+  <p>对外宣称：若上帝不全能，教会宣称的终极审判和绝对权威又是什么？</p>
+  <p>核心教义：得救不靠教会圣礼，而是靠获得某种"隐秘知识"（Gnosis）</p>
+  <p>肉体是灵魂的囚笼，真正的至高神远超教会的认知</p>
+  <p><strong>指引等级判定：</strong>三级（有具体教义内容、传播策略、理论框架）</p>
+  <p><strong>KP判定结果：</strong>指引本身精确且具备理论深度，但秦川南当前被困要塞、士兵不信、瘟疫在侧，三重困境使指引暂时无法落地但已经完全信任的神明，因此主动求助</p>
+</blockquote>
+<blockquote>
+  <p><strong>卡洛西：</strong></p>
+  <p>"反抗的焰火一旦燃起就难以熄灭"</p>
+  <p>"日后终将焚净旧日残余，国度的腐朽还在加剧"</p>
+  <p>"被压迫到极限的人们又会有何等反抗？"</p>
+  <p><strong>指引等级判定：</strong>二级（宏观描述革命必然性，但无具体行动指示或时间地点）</p>
+  <p><strong>KP判定结果：</strong>指引正确描述了革命趋势，但秦羽因过度劳累已连续数月无休，神谕无法接收，在当前状态下无法被执行</p>
+</blockquote>
+
+<h3>角色反馈记录</h3>
+<p><strong>柠檬茶·信徒反馈：</strong></p>
+<p>秦川躺在床上叹了口气</p>
+<p>自己现在连城都出不去，还爆发了瘟疫</p>
+<p>问题是一群在刀尖上求生的士兵又怎么会虔诚的信神呢？</p>
+<p>他现在出不去城，根本把握不住什么所谓的机会</p>
+<p>毕竟他相信仙人的存在，是因为仙人真的在他脑子里说过话</p>
+<p>但其他人可没有</p>
+<p>不过教义这个东西确实得好好想想</p>
+<p>主要是现在他说的话没人信</p>
+<p>怎么办呢？</p>
+<p>"神啊，你就没有什么其他好办法吗？"</p>
+<p><strong>KP记录：</strong>秦川南已从"半信半疑"转为"完全信仰"当前三重困境——被困要塞、传道失败、瘟疫在侧已完全接受两套教义思路，但缺乏传播渠道正在等待神灵给予更具体的行动方案若长时间得不到有效回应，就只能随机应变了</p>
+
+<p><strong>卡洛西·信徒反馈：</strong></p>
+<p>最近几天可把秦羽累坏了</p>
+<p>自从瘟疫爆发后，她就在各地四处忙碌</p>
+<p>士兵们恨不得一天24小时住她帐篷里</p>
+<p>她已经连续好几个月没休息了</p>
+<p>整个人迷迷糊糊，晕晕乎乎</p>
+<p>连神谕下达都没法听了</p>
+<p>呜呼哀哉</p>
+<p><strong>KP记录：</strong>秦羽已完全信任指引者，但当前被瘟疫救治工作压垮身体状态：连续数月无休，精神恍惚神谕接收状态：暂停接收军医身份特殊说明：秦羽随军行动，被军队严密保护这种保护不是"安全"——而是被迫跟随军队高强度运转革命和瘟疫双重压力下，消耗速度远超普通信徒</p>
+
+<h3>事件</h3>
+<blockquote>
+  <p><strong>〖第13个月·神不当人 人必当神〗</strong></p>
+  <p>随着不断的重压，异教徒的变化，新思想的传播</p>
+  <p>随着第1声警报的拉响，武备库中本来安心休息的士兵，面对的是汹涌的人潮</p>
+  <p>那些农民，那些市民，他们拿起了手中的锄头、刀、铁锹，一股脑的冲向武备库</p>
+  <p>砸，抢，杀！</p>
+  <p>士兵们几乎还没反应过来，就被淹没在了人潮里</p>
+  <p>一个市民率先冲进仓库，举起了一杆长枪大喊</p>
+  <p>"让那些高高在上的贵族老爷把我们应有的粮食还给我们！"</p>
+</blockquote>
+<blockquote>
+  <p><strong>〖第14个月·叛乱〗</strong></p>
+  <p>随着第1个武备库被牢牢掌控，帝国境内各地的民众纷纷揭竿而起</p>
+  <p>有些被镇压</p>
+  <p>还有一些在边境叛乱的，还没等领主派兵镇压，就已经杀进城主府了</p>
+  <p>宗教被掌控，神像被推翻</p>
+  <p>如果不快些，怕是完了</p>
+</blockquote>
+<blockquote>
+  <p><strong>〖第15个月·神不容侵犯〗</strong></p>
+  <p>此举狂妄的举动，不仅引起了帝国的注意，也引起了宗教的注意</p>
+  <p>少见的帝国近卫军和国防军联合宗教骑士团联手镇压此次叛乱</p>
+  <p>堡垒的士兵被调出，迅速动员，妄图扑灭革命</p>
+</blockquote>
+<blockquote>
+  <p><strong>〖第16个月·商会·雇佣兵团〗</strong></p>
+  <p>但革命可不仅仅限于农奴与农民</p>
+  <p>各地的商人也被迫揭竿而起</p>
+  <p>毕竟你收这么多税，我们怎么活啊？</p>
+  <p>小商人们几乎散尽了自己的家财去佣兵工会雇佣那些常年执行赏金任务的雇佣兵</p>
+  <p>而各地的商会们见到这种势头，很快就有人下了判断</p>
+  <p>如果帮助贵族与宗教，他们不仅要受制于王权之下，恐怕还要被收更多的税</p>
+  <p>但如果帮助起义军，到时候可就是他们说了算了</p>
+  <p>而周围的几个国家也乐于见得帝国猛然分裂</p>
+  <p>毕竟帝国分裂了，领土可就是他们的了</p>
+  <p>无数的军备、资源、钱财被送往起义军内部</p>
+  <p>这样下去，千年帝国怕是要葬送于此</p>
+</blockquote>
+    <blockquote>
+      <p><strong>〖第18个月·王权〗</strong></p>
+      <p>高山上，埋伏在此的指挥官下达了一个疯狂的指令</p>
+      <p>"重骑列阵！向敌军中部，为了帝国，冲锋！"</p>
+      <p>这支被帝国娇生惯养的禁卫军猛然向下冲去</p>
+      <p>马蹄阵，黄沙滚，声如雷鸣，势如恶鬼</p>
+      <p>原本正在行军的革命军还没反应过来，就被重骑兵冲了个散架，随后是溃散</p>
+      <p>毕竟雇佣兵如果可以，还是不想卖命的</p>
+      <p>至于普通的农奴、农兵，更是没接受过专业训练</p>
+      <p>打打顺风仗还好，但像这种完全被碾压的正面硬仗还是打不了的</p>
+      <p>高山之上，指挥官举起军旗，大声高呼</p>
+      <p>"帝国的荣光仍在，帝国的荣光永恒！"</p>
+    </blockquote>
+
+    <h3>事件关键节点分析</h3>
+    <pre>◆ 革命全面爆发（第13-14个月）：神像被推翻，与秦川南的教义核心"教会权威是欺骗"形成现实映证但秦川南仍被困克尔赫拉斯
+◆ 驻军调离（第15个月）：帝国调集军队镇压叛乱，克尔赫拉斯驻军被部分抽调秦川南"被困"困境出现转机——守卫减少意味着管控可能松动秦羽所在的医疗队伍可能随军调动，面临更高的战地救治压力
+◆ 商会倒向起义军（第16个月）：革命从农奴暴动升级为多阶层全面内战秦川南的"两套教义"策略在多方势力混战中有了更大操作空间——商会、佣兵团、周边国家都是潜在传道对象
+◆ 重骑兵镇压（第18个月）：一支革命的主力被击溃，但其余分支与主分支势头正盛，商会资金和周边国家支持仍在，革命只是暂时蛰伏帝国指挥官高呼"荣光仍在"更像是帝国濒死的最后呐喊</pre>
+
+    <h3>点数变动汇总</h3>
+    <pre>柠檬茶：上回合剩余100 → 第3回合固定+100 → 投放革命二级-200 → 投放异教徒一级-100 → 当前0点
+卡洛西：上回合剩余300 → 第3回合固定+100 → 投放革命二级-200 → 投放农奴一级-100 → 当前200点</pre>
+
+    <h3>信徒信仰状态评估</h3>
+    <pre>秦川南：信仰已确立从"半信半疑"转为"完全信仰"，主动向神祷告求助但若长期被困且神无回应，信仰存在动摇风险
+秦羽：信仰已完全确立但身体极限已到连续数月无休导致神谕暂停接收，信仰忠诚但物理承载已近上限若疫情加剧或战争逼近，存在崩溃风险</pre>
+
+    <h3>灾难演变追踪</h3>
+    <pre>革命（四级·特大灾难）：双人叠加+演化第13-14个月全面爆发，第16个月商会加入，第18个月被重骑兵暂时镇压火种未灭
+思想变迁（三级）：锁定延续新思想从地下转为公开呐喊
+宗教与王权（二级）：已达持续上限3回合，进入衰退观察期
+马瘟（一级）：第11个月爆发，第3回合影响仍在扩大
+异教徒（一级·新投）：将在革命与神像被推翻的背景下快速成长
+农奴=黑奴（一级·新投）：领主压榨加剧，为革命提供持续兵源</pre>
+
+    <h2>第4回合 · 完整演示</h2>
+
+    <h3>记录面板</h3>
+    <pre>回合: 4    阶段: 爆发期</pre>
+
+    <h3>信徒状态</h3>
+    <pre>柠檬茶 | 秦川南 | 女巫/江湖术士 | 随军吟游诗人（男）· 已脱离军队 | 成功逃离·精疲力尽·亲历神音广播 | 150点
+卡洛西 | 秦羽   | 女巫/医者     | 军队军医（女）·随军行动·被严密保护 | 极度疲惫·神音广播后昏倒·被修女扶起 | 300点</pre>
+
+    <h3>指引精确度</h3>
+    <pre>柠檬茶：第1回合 否（模糊） / 第2回合 否（模糊） / 第3回合 否（理论精确·受困无法执行） / 第4回合 否（内容模糊·广播形式+150点）
+卡洛西：第1回合 是（+100） / 第2回合 是（+100） / 第3回合 否（宏观准确·劳累无法接收） / 第4回合 否（内容具体·广播形式+100点）</pre>
+
+    <h3>势力</h3>
+    <pre>教会状态：教皇被钉死于神像·骑士团回撤·随军修女因神音广播开始分化
+平民状态：饥荒蔓延·易子而食·部分加入起义军
+军队状态：帝国军军心不稳·帝崩消息泄露·各方势力开始插手
+起义军：一支小分队遭地震重创·死伤9000余人·但指挥官仍在
+周边国家：持续输送军备·静观帝国内乱
+备注：两道神音被教会宣扬为上帝存在的证明巩固自身信仰</pre>
+    <h3>当前活跃灾难</h3>
+    <pre>① 宗教与王权 | 帝国全境 | 已持续 4 回合 | 二级
+② 思想变迁 | 民间 | 已持续 3 回合 | 三级
+③ 革命 | 帝国全境 | 已持续 3 回合 | 四级·特大灾难
+④ 马瘟/牲畜瘟疫 | 克尔赫拉斯及周边 | 已持续 2 回合 | 一级
+⑤ 异教徒 | 各地民间 | 已持续 2 回合 | 二级
+⑥ 农奴=黑奴 | 各地领主领地 | 已持续 2 回合 | 一级
+⑦ 地震 | 起义军所在区域 | 已持续 1 回合 | 一级·短期
+⑧ 帝崩 | 帝国皇宫 | 已持续 1 回合 | 一级</pre>
+
+    <h3>末日选择记录</h3>
+    <pre>双方末日商店（本次内容相同）：①思想变迁·三级 ②马瘟·二级 ③异教徒·二级 ④地震·X级 ⑤帝崩·一级
+
+柠檬茶：
+→ 选择 ④地震·一级（短期·天灾类，100点）
+   投放位置：起义军所在区域
+   理由：以自然灾害削弱起义军力量，防止革命过快成功，维持帝国与起义军的战略平衡，为自己趁乱传道争取时间
+   点数：上回合剩余0 → 第4回合固定+100 → 投放地震-100 → 剩余0点 → 广播指引+150 → 最终150点
+
+卡洛西：
+→ 选择 ⑤帝崩·一级（长期·人祸类，100点）
+   投放位置：帝国皇宫
+   理由：帝国内乱正酣，老皇帝若在此时驾崩，王权真空将引发继承争夺，帝国再无统一调度
+   点数：上回合剩余200 → 第4回合固定+100 → 投放帝崩-100 → 剩余200点 → 广播指引+100 → 最终300点</pre>
+   
+    <h3>灾难等级联动详解</h3>
+    <pre>【革命·四级】维持：第3回合已达四级·特大灾难本轮柠檬茶向起义军投放地震，死伤9000余人，革命力量暂时削弱，但商会和周边国家的支持仍在，革命火种未灭当前仍为四级
+【帝崩·一级】新投：卡洛西使用长期·人祸类灾害老皇帝驾崩，消息暂时被大皇子封锁帝崩与教皇之死在同回合内发生帝国和教会的最高领袖同时陨落，权力真空前所未有之大
+【异教徒·二级】演化推升：第3回合柠檬茶投放一级 → 第4回合革命与神音广播背景下，异教信仰在动乱中壮大，演化推升至二级</pre>
+
+    <h3>指引记录</h3>
+    <blockquote>
+      <p><strong>柠檬茶（广播形式——外界传音，周围所有军士、修女、平民均可听见）：</strong></p>
+      <p>"我的信徒们，不必畏惧"</p>
+      <p>"我将归来，我已归来！"</p>
+      <p>"让我的力量显现在这吧！"</p>
+      <p><strong>指引等级判定：</strong>一级（无具体事件或时间地点，纯宣告式）</p>
+      <p><strong>KP判定结果：</strong>广播形式本身即为力量的展示神音从天而降，士兵将此视为上帝庇佑的证明，随军修女震惊获得150点信仰力</p>
+    </blockquote>
+    <blockquote>
+      <p><strong>卡洛西（广播形式——外界传音，与柠檬茶的神音一前一后响起）：</strong></p>
+      <p>"遭瘟者需与他者相隔"</p>
+      <p>"直截之活水亦将含万千恶咒，需以烈焰焚烧至水之冒泡"</p>
+      <p>"已痊愈之人躯壳中恰已蕴藏抗疫之力"</p>
+      <p>"世间万物皆有含疫之机"</p>
+      <p><strong>指引等级判定：</strong>一级（有具体抗疫内容但无时间地点指向）</p>
+      <p><strong>KP判定结果：</strong>连续两次神音（一男一女）引发的叠加震撼远超单次广播随军修女从"将信将疑"转为"跪地祈祷"秦羽本人喊出"我神永昌"后力竭昏倒获得100点信仰力</p>
+    </blockquote>
+    
+<h3>角色反馈记录</h3>
+<p><strong>柠檬茶·信徒反馈：</strong></p>
+<p>在军队被调动的一瞬间，秦川几乎就意识到了不对</p>
+<p>在走下高山后，趁督战官不注意，他几乎撒丫子就跑</p>
+<p>"我靠，这东西真TM死沉啊"</p>
+<p>他丢弃了头盔，又丢弃了自己的行军背包</p>
+<p>最终一屁股瘫坐在地</p>
+<p>"累死我了"</p>
+<p>浩瀚的神音自天空之上响起，引得军士纷纷抬头</p>
+<p>"这是神迹！上帝庇佑着我们！"</p>
+<p>军士们欢呼着，就连随军修女都有些懵逼</p>
+<p><strong>KP记录：</strong>秦川南在第4回合趁军队调动的混乱时机成功逃离丢弃头盔和行军背包，轻装脱身，但也因此一无所有持续三回合的"被困要塞"困境正式解除就在他瘫坐喘息时，指引者的广播神音从天而降——这是他第一次以公开方式见证神的力量士兵和修女的反应极为强烈，神音被教会利用为"上帝存在的证明"秦川南逃脱后去向不明，但他已获得自由</p>
+
+<p><strong>卡洛西·信徒反馈：</strong></p>
+<p>行军的两个月，让她真正过上了牛马生活</p>
+<p>吃不好也睡不好，还要在停下行军时为大批量的士兵治疗</p>
+<p>虽然这里的医生很多，但是士兵更多啊</p>
+<p>"这样下去什么时候才是个头"</p>
+<p>"姐，你还好吗……"</p>
+<p>连续两次神音响起，一男一女</p>
+<p>原本将信将疑的随军修女们跪倒在地，虔诚的祈祷着</p>
+<p>这也让秦羽一惊</p>
+<p>"我神永昌！"</p>
+<p>随后整个人倒在了地上，被身旁的修女扶起</p>
+<p>"你还好吧？"</p>
+<p><strong>KP记录：</strong>秦羽连续行军两个月，身体濒临极限她在疲惫中想念姐姐秦川南，但此时并不知得姐姐已逃跑连续两道神音先后响起——她信仰的神与另一位神一同公开显灵"我神永昌"是她对指引者所有预言的终极告白，随后力竭昏倒修女将她扶起但这一扶意味着秦羽在修女群体中的影响力正在扩大但她不知道，这将是她的最后一次神启，日夜操劳的身躯早已不堪重负</p>
+
+<h3>事件</h3>
+<blockquote>
+  <p><strong>〖第19个月·圣神！〗</strong></p>
+  <p>从科尔赫拉斯调出的帝国边军最近发生了一些惊奇的事儿</p>
+  <p>据传言，连续两次神音在军阵中响起，在场的士兵无不信服，无不跪拜</p>
+  <p>这变成了宗教宣扬上帝存在的有力证明</p>
+  <p>我神永昌！</p>
+</blockquote>
+<blockquote>
+  <p><strong>〖第20个月·地震〗</strong></p>
+  <p>帝国军与起义军的拉锯如火如荼</p>
+  <p>但今天怕是不太妙了</p>
+  <p>起义主力军突发地震，引得房屋倒塌，大地直接裂开了一个口子</p>
+  <p>死伤超过了9000余人</p>
+  <p>但还好，地震也让帝国军略有损失</p>
+  <p>双方因为地震都暂时延缓了军事行动……</p>
+</blockquote>
+<blockquote>
+  <p><strong>〖第21个月·帝崩〗</strong></p>
+  <p>老帝皇已经80多了</p>
+  <p>在今日，这副传奇之躯终于迎来了他的终末</p>
+  <p>大皇子下令封锁寝宫，绝不允许将消息传出</p>
+  <p>首都全城戒严</p>
+  <p>目前除了大皇子还没人知道这事儿</p>
+  <p>但又能瞒多久呢？</p>
+  <p>更何况帝国立长不立庶</p>
+</blockquote>
+<blockquote>
+  <p><strong>〖第22个月·神诞〗</strong></p>
+  <p>今天注定不是个太平日子</p>
+  <p>巡夜修女在巡逻到主厅时，发现了不可思议的一幕</p>
+  <p>教皇被钉在了神像上</p>
+  <p>鲜血几乎溅满了整个神像</p>
+  <p>修女惊叫一声，感受着那温热的血液，连连后退</p>
+  <p>骑士团很快封锁了全场……</p>
+</blockquote>
+<blockquote>
+  <p><strong>〖第23个月·饥荒〗</strong></p>
+  <p>不断的战争导致各地的庄稼根本没人打理</p>
+  <p>而人们已经没有余粮了</p>
+  <p>饥饿逼得人们不得不易子而食</p>
+  <p>或者是……反叛，加入起义军</p>
+</blockquote>
+<blockquote>
+  <p><strong>〖第24个月·动乱〗</strong></p>
+  <p>老帝皇的死亡最终还是传了出去</p>
+  <p>这让帝国军内一瞬间就陷入了动乱</p>
+  <p>或者说——给了各个势力插手军队的机会</p>
+  <p>帝国军队开始军心不稳</p>
+  <p>而骑士团又因为教皇的死亡被迫回撤……</p>
+</blockquote>
+
+    <h3>事件关键节点分析</h3>
+    <pre>◆ 神音被收编（第19个月）：两次广播神音被教会诠释为"上帝存在的证明"柠檬茶和卡洛西公开显灵的后果——他们的神迹被旧宗教体系没收，变成了对旧神的证词而非新神的诞生
+◆ 地震双重效果（第20个月）：起义军死伤9000余人，但帝国军也受到波及柠檬茶的目标是延缓革命进程，但地震造成的双方停战反而给了帝国瓦解的时间窗口
+◆ 双王陨落（第21-22个月）：老皇帝驾崩，教皇被钉死于神像帝国最高世俗权力和最高宗教权力在同一个回合内陨落卡洛西投放的帝崩与教皇之死形成了历史共振
+◆ 饥荒与兵源（第23个月）：饥荒逼迫人们易子而食选择只有两个——饿死，或者加入起义军这为革命提供了源源不断的兵源补充，地震造成的损失正在被补充
+◆ 军队瓦解（第24个月）：帝崩消息泄露，各方势力开始插手军队骑士团因教皇之死被迫回撤帝国镇压革命的主力正在自行解散</pre>
+
+    <h3>点数变动汇总</h3>
+    <pre>柠檬茶：上回合剩余0 → 第4回合固定+100 → 投放地震-100 → 剩余0点 → 广播指引+150 → 最终150点
+卡洛西：上回合剩余200 → 第4回合固定+100 → 投放帝崩-100 → 剩余200点 → 广播指引+100 → 最终300点</pre>
+
+    <h3>信徒信仰状态评估</h3>
+    <pre>秦川南：信仰达到最高点神音是回应他第3回合"神啊，你就没有什么其他好办法吗"的呼求已获得自由，虽然一无所有他并不知道——秦羽就在离他不远的行军队列中
+秦羽：信仰达到绝对顶点，但身体已到极限她喊出"我神永昌"后昏倒，被修女扶起她在疲惫中想念姐姐，却不知姐姐已成功逃离连续数月的劳顿将继续消耗她，直到终点</pre>
+
+    <h3>灾难演变追踪</h3>
+    <pre>革命（四级·特大灾难）：地震造成9000人死伤，但饥荒正源源不断为革命输送新兵源帝国军军心不稳，骑士团回撤革命虽暂缓军事行动，但帝国瓦解的速度更快
+帝崩（一级·新投）：老皇帝驾崩，帝国无主与教皇之死形成双王陨落
+宗教与王权（二级·已持续4回合）：已达持续上限教皇之死将彻底改变教会权力结构
+思想变迁（三级·已持续3回合）：新思想随革命和饥荒扩散
+异教徒（二级）：演化推升，在双王陨落和神音广播的混乱中继续壮大</pre>
+    <hr>
+
+    <h2>结局</h2>
+
+    <h3>遗憾与胜利</h3>
+    <p>秦羽在连续数月的劳顿与随军下去，终究是撑不住，累死在了行军过程中</p>
+    <p>而她不知道的是——自己的姐姐，起义军的指挥官秦川南——距离她不过区区一个镇子的距离</p>
+    <p>只可惜，她到死也找不到了</p>
+    <p>秦川南在逃离军队后，凭借指引者赐予的两套教义框架，在帝国全面瓦解的混乱中找到了自己的位置</p>
+    <p>教会的旧神体系因教皇之死和神音被收编而摇摇欲坠</p>
+    <p>饥荒源源不断地将信徒推向新的信仰</p>
+    <p>他不再是那个被困要塞、传道无人听的孤单诗人</p>
+    <p>旧世界正在崩溃</p>
+    <p>而新神的教义已在废墟中萌芽</p>
+    <p><strong>胜者：柠檬茶</strong></p>
+
+    
+          <h3>本局信息</h3>
+    <pre>历时：8小时（下午5:40至凌晨1:11）
+回合数：4回合
+DLC：未启用
+背景：中世纪
+城镇：克尔赫拉斯·帝国边境军事堡垒</pre>
+<p style="text-align: right; font-size: 0.9em;"><a href="#demo-top">⬆️ 回到示例顶部</a></p>
+    <hr>
+    <p><em>第1至4回合范本完整记录完毕记录人：秦月（KP）</em></p>
+<hr>
+<p><em>小贴士：本范本中的点数变动汇总、事件关键节点分析、信徒信仰状态评估、灾难演变追踪等内容，皆由 DeepSeek（D老师）辅助完成（毕竟本人无法在开团过程中编写代码）以上演示皆为实战内容，从下午5:40至凌晨1点:11 历经9个小时（但这是在作者本身在带团过程中整理，调整文件，校准AI，一心四用导致的）由于本团计算量过大，强烈建议KP在实际开团中可使用AI工具分担记录与分析工作，将精力集中在剧情推演与玩家互动上
+（工具箱中有现成的AI模板可以用）。</em></p>
+</section>
+ <section id="quick-start-pack">
+  <div class="kp-card">
+    <h2>灭世之书 · 快速开局包</h2>
+  </div>
+    <p><em>以下为本书为神明大人们提供的快速游戏整合，如您想快速进行一把游戏，可直接参考，甚至照搬</em></p>
+
+  <h3 style="margin-top: 0;">快速开局清单</h3>
+  <ul style="margin-bottom: 0;">
+    <li>□ 确定世界背景
+  <br>（现代/中世纪/架空）并告知玩家</li>
+    <li>□ 为每位玩家准备3个备选角色
+    <br>（从角色库中挑）</li>
+    <li>□ 准备第1回合的末日商店
+   <br>（3-5个灾难，可抄“末日条目库”）
+   </li>
+    <li>□ 准备第1回合的关键事件
+   <br>（至少1条，可复用示例）</li>
+    <li>□ 熟悉“指引等级判定”表格
+    <br>（三要素）</li>
+    <li>□ 可选：打开AI工具辅助生成文案</li>
+  </ul>
+    <hr>
+
+    <h2>一·世界库</h2>
+    <pre>世界名称：〖奥尔德温大陆〗
+存活人数：〖约1.2亿〗
+存在势力：〖萨勒帝国〗〖布萨公国〗〖自由城邦联盟〗〖圣教会〗
+文明秩序：〖中〗
+科技发展程度：〖中世纪·冷兵器时代〗</pre>
+    <p><strong>世界背景简述：</strong></p>
+    <p>奥尔德温大陆上，萨勒帝国与布萨公国世代为邻，边境摩擦不断圣教会掌管信仰，拥有独立的宗教武装与审判权自由城邦联盟夹在两大势力之间，靠贸易维持中立大陆表面和平，但王权、领主、教会三方互相牵制，任何一个火星都可能点燃战乱。</p>
+
+    <hr>
+
+    <h2>二·城镇库</h2>
+    <pre>【克尔赫拉斯】
+类型：帝国边境军事堡垒
+地形：高山之上
+人口：[ 约1万 ]
+卫生状态：[ 差 ]
+防守力量：[ 严密·千年要塞 ]
+粮食储备：[ 充裕 ]
+特点：少有人员流窜，城内驻扎的绝大部分为士兵，平民数量稀少易守难攻，但卫生条件恶劣</pre>
+
+    <h3>克塔尔镇信息</h3>
+    <pre>=======================
+城镇名称：〖克塔尔镇〗
+类型：帝国中型城镇
+人口：[ 10万 ]
+守备力量：[ 空虚 ]
+卫生条件：[ 极差 ]
+粮食储备：[ 充盈 ]
+=======================</pre>
+    <hr>
+
+    <h2>三·角色库</h2>
+
+    <h3>第一组</h3>
+    <pre>〖盗贼·桥尔德拉〗
+生活在中世纪尼斯城的一个小贼，18岁，身形比正常人瘦小，敏捷，脚步轻能说会道，移动快，几乎是盗贼的职业素养
+
+〖面包商·卡拉〗
+城里的小面包商，20多岁的少女，有资金储备，做面包手艺不错至于有没有用，得看情况
+
+〖女巫·秦川南〗
+从东方而来的江湖术士，能掐会算，巧舌如簧，40多岁要不是东方战乱，绝对不会来西方目前在军队里当随军吟游诗人，靠坑蒙拐骗士兵混日子</pre>
+
+    <h3>第二组</h3>
+    <pre>〖修女·法尔拉〗
+城镇修道院的修女，18岁，性格温柔，有艺术经验，为人和善，人缘好，跟教会里的骑士走得近
+
+〖教会骑士·克尔丽斯〗
+宗教骑士，19岁，住在修道院，接受过战斗训练平常负责安全和护送修女，性格温柔稳重，会照顾人
+
+〖女巫·秦羽〗
+从东方而来的江湖术士，能掐会算，会做药方为寻找因战乱失散的姐姐来到西方，目前是军队军医，没有固定居所</pre>
+  <h3>第三组</h3>
+    <pre>〖雇佣兵·克里斯〗
+30多岁的老练佣兵，严格来说算是赏金猎人，毕竟他没有自己的雇佣兵团，也不听指挥，但常年的厮杀让他落下了一身旧伤，有不少存款
+
+〖旅商·沙尔斯〗
+新兴商队的年轻旅商，从小就跟家里跑商，性格谨慎，能说会道，跟各种人都打过交道，还有着一定管理经验，如今也算继承家业了
+
+〖医生·温尼尔〗
+年轻的温柔少女，有行医经验，随商队行动话少，没战斗力，但作为商队中唯一的一名队医，几乎也没人敢惹他</pre>
+
+    <h3>第四组</h3>
+    <pre>〖骑士·康拉德〗
+刚通过骑士考核不到半年的年轻骑士，封地在边境，时常有贼寇骚扰，让他养成了遇事不决先动手的性格，毕竟慢一步可能就死了，边境这种地方没人听你讲道理
+
+〖铁匠·老陈〗
+城里的铁匠，打了一辈子铁，常年抡锤，让左胳膊比右胳膊壮了一圈，脾气很臭，但大多也是刀子嘴豆腐心，人缘还不错，毕竟有钱他是真借，而且也不会像其他债主一样，冲进你家里打砸抢
+
+〖酒馆老板娘·玛格丽特〗
+小镇酒馆的老板，据传早年间男人被抓了壮丁，就留下了这么一间小酒馆，愣是从18岁看到了30多岁，这么多年的职业素养，让他性格机敏，会察言观色，能说会道
+
+〖猎人·法洛斯〗
+56岁，左眼失明，右腿瘸了原本是军官，但，由于违抗军令被退伍令打回原形只能被迫进山当猎人了
+
+〖吟游诗人·春〗
+外表十几岁的少女，实际五十多岁什么风浪都见过，实际上他才是真正的女巫</pre>
+
+<hr>
+
+<h2>四·角色导入模板</h2>
+<p><strong>【柠檬茶 · 秦川南】</strong></p>
+<p>“哈利，我之前在科尔糊见过伏尔斯基和卡尔尼曼偷藏了一笔钱袋，现在你把它拿过来，不就是你的吗？”</p>
+<p>“可这……不太好吧？”</p>
+<p>“这有什么不好的，今晚我们一起行动，合伙把它分了，反正没人知道，然后去喝酒，岂不妙哉？”</p>
+<p>哈利犹豫后点了头秦川看着他慌忙跑出去的背影，狡黠一笑——“在这儿可比在那舒服多了”毕竟家乡四处战乱，哪有这当随军吟游诗人太平？不用干重活，不用打仗，只需要跟士兵们聊天打屁就行了</p>
+
+<p><strong>【卡洛西 · 秦羽】</strong></p>
+<p>秦羽给士兵敷上草药，重新包扎“之后注意，小心伤口再被划伤”</p>
+<p>“谢谢”少年士兵道了声谢，走出营帐</p>
+<p>秦羽叹了口气，烛火映出她还算秀丽的面容自从为寻找姐姐踏上这片大陆，这已经不知道是她来过的第多少个城镇了每个镇子住一个月，然后四处找人，到现在都没找到</p>
+<p>“她不会死了吧……？”</p>
+
+    <hr>
+
+    <h2>五·末日条目库</h2>
+
+    <h3>瘟疫类</h3>
+    <pre>〖黑死病·一级〗 长期·瘟疫类 100点
+中世纪爆发的特大病症之一，可加快这个时间节点，让它提前到来
+
+〖马瘟·一级〗 长期·瘟疫类 100点
+战马是帝国军队的命脉如果战马都死完了，军队的骑兵也相当于废了
+
+〖灰败症·一级〗 长期·瘟疫类 100点
+港口最近有人发烧不退，皮肤慢慢变灰医生还在查病源，但实际上启航节刚过，各地的船都来过，根本就查不到
+
+〖天花·一级〗 长期·瘟疫类 100点
+南边镇子上有人出疹子第一个病例被藏在柴房里烧了，但总感觉不太对劲</pre>
+
+    <h3>战争类</h3>
+    <pre>〖战乱·一级〗 长期·人祸类 100点
+农民革命、骑士团斗争、雇佣兵流窜、宗教圣战、领主混战中世纪从不缺战争，为何不让它快点到来？
+
+〖边境摩擦·一级〗 长期·战争类 100点
+铁山隘口只有一条商路，运粮运铁全靠它但是呢，这地方又是两国边境，属于争议之地，如果王国与公国重新对峙，封锁边境线，道路一断，那就可以开始饥饿游戏了
+
+〖革命·一级〗 长期·人祸类 100点
+高税收，贪腐，连年歉收，商人没钱赚，农民吃不饱，这样下去可不是什么好兆头
+
+〖圣战·一级〗 长期·人祸类 100点
+高压之下，宗教若开启圣战是极佳的转移方式，顺便还能再收一波税，岂不妙哉？</pre>
+<h3>天灾类</h3>
+    <pre>〖蝗灾·一级〗 长期·天灾类 100点
+中世纪的欧洲一望无际的平原，本身皮革和肉类就少再来一波蝗灾，粮食欠收，人们就不用吃饭了
+
+〖洪灾·一级〗 短期·天灾类 100点
+中世纪几乎没有高山，全是平原，沿海城市很容易受洪灾让巨浪吞没一切，即可引发连锁反应
+
+〖地震·一级〗 短期·天灾类 100点
+向任意地点或任意军队投放一场地震，让他们折戟沙场
+
+〖粮仓发霉·一级〗 长期·天灾类 100点
+秋收赶上连阴雨，麦子堆在仓里闷了两个月，底下一层已经发绿管事的不敢上报，把霉的翻到上面盖住，好的先发要是霉变面粉进了磨坊，发霉的粮食越来越多……</pre>
+
+    <h3>人祸类</h3>
+    <pre>〖宗教与王权·一级〗 长期·文化类 100点
+教皇和国王互相扯皮，国王向领主收税，领主向农奴收税，教会向市民收税最近收成不好，再额外加税，很难不出问题
+
+〖猎巫·一级〗 长期·人祸类 100点
+民怨四起，教会需要理由刚好有人举办秘密仪式时被举报，教会当场将其处死，定义为邪恶的巫师人们终于有发泄口了
+
+〖异端·一级〗 长期·文化类 100点
+中世纪从不缺各种信仰，邪教与异教也在变革为何不帮它们一把，让它们大肆流传？
+
+〖宗教分裂·一级〗 长期·文化类 100点
+教皇统领着教会，但同一教育下也有不同看法从来不缺野心家挑战教皇的权威
+
+〖帝崩·一级〗 长期·人祸类 100点
+帝国动乱之际，如果帝皇死在皇宫里……难以想象
+
+〖思想变迁·一级〗 长期·文化类 100点
+高压之下，民众几乎100%会推翻领主而这个时候，地下祭典与秘密议会将像野火一样蔓延
+
+〖农奴=黑奴·一级〗 长期·人祸类 100点
+王室重压令领主额外收税，农奴们干活更起劲了，呜呼哀哉
+
+〖流言·一级〗 长期·人祸类 100点
+新王登基那天，王旗上落了三只乌鸦这在教会里可是不祥征兆，如果让宗教借题发挥的话……</pre>
+
+    <hr>
+
+    <h2>六·世界事件示例</h2>
+
+    <h3>第1回合</h3>
+    <pre>〖第1个月·神祭〗
+10年一度的神迹之日，人们自发走上街头为神明欢送如果没有坠尸的话砰的一声，从钟楼上摔下东西砸在路人身上，鲜血粪便撒了一地然后是第2个、第3个人群惊呼“杀人了！”慌乱奔走，踩踏无数，卫兵根本挡不住暴乱的民众
+
+〖第2个月·凶手落幕〗
+神祭被迫终止，几名修女被残忍杀害后从钟楼抛下凶手几乎第2天就被拉上火刑架焚烧而死至于为什么异教徒能混入大教堂？没人在乎，反正教会说是异教徒，难不成你还能反驳？
+
+〖第3个月·税收〗
+“为了让神息怒，我们需要上交纯洁的灵魂与祭品……”教会颁布了额外三项税令纯自愿的——毕竟虔诚的信徒确实应该赢得宽恕不是信徒？这不就是异教徒吗？
+
+〖第4个月·王室法令〗
+借着教会的行动，王室也增加了治安税、安定税人们苦不堪言，不过好消息是巡逻卫兵多了，治安还算好一点一个市民这么安慰自己，交上孝敬钱，灰溜溜跑回家
+
+〖第5个月·积累〗
+“这样下去什么时候是个头啊”河边洗衣的妇女抱怨“谁知道呢，最后一点余粮都交上去了，勒紧裤腰带喽”“唉……”
+
+〖第6个月·自欺欺人〗
+教会制作木质神像向信徒推销人们已经没钱了，信仰不诚的信徒被判定为异教徒上了火刑架“这tmd……”一个中年人见证了异教徒被净化后回到家中，暗骂“这样下去迟早得死”那位异教徒是他的好友</pre>
+
+    <h3>第2回合（节选）</h3>
+    <pre>〖第8个月·偷窃？〗
+法尔斯镇，一伙民众因接近军备库被押上刑场处死，鲜血溅了围观路人一身人们开始流传“定是恶魔所为，教会背弃了神明”，但规模不大
+
+〖第9个月·袭击〗
+一伙暴民袭击了村中粮库，取得武器当地领主已派兵镇压
+
+〖第11个月·瘟疫？〗
+克尔赫拉斯城的战马大批死亡军医推断是瘟疫，要求隔离动物，随着这迟来的信封终于到达帝国，帝国命令境内的医者会前去支援，毕竟 传染到人身上可不是小事
+
+〖第12个月·医者会〗
+堡垒沉重的大门缓缓开启，随着医者们的到场，人们终于大概搞清了病因最起码医生是这么说的，大批大批的动物尸体被烧毁，但一股黑烟几乎顺着风飘向了山下……</pre>
+
+    <h3>第3回合（节选）</h3>
+    <pre>〖第13个月·神不当人 人必当神〗
+武备库的士兵面对汹涌的人潮农民和市民拿起锄头、刀、铁锹冲向武备库——砸，抢，杀一个市民率先冲进仓库举起长枪大喊：“让那些高高在上的贵族老爷把粮食还给我们！”
+
+〖第14个月·叛乱〗
+帝国各地民众纷纷揭竿而起有些被镇压，有些还没等领主出兵就已杀进城主府宗教被掌控，神像被推翻
+
+〖第16个月·商会·雇佣兵团〗
+革命不仅限于农奴与农民小商人们散尽家财雇佣赏金佣兵各地商会也在判断——帮贵族还要受制于王权，帮起义军就是自己说了算周边国家也乐于见得帝国分裂，军备和资金源源不断送往起义军
+
+〖第18个月·王权〗
+“重骑列阵！向敌军中部冲锋！”禁卫军从高山猛冲而下，马蹄如雷，势如恶鬼革命军被冲得溃散——雇佣兵不想卖命，农奴兵没受过训练，打不了这种硬仗指挥官高举军旗：“帝国的荣光仍在，帝国的荣光永恒！”</pre>
+
+    <h3>第4回合（节选）</h3>
+    <pre>〖第19个月·圣神！〗
+从克尔赫拉斯调出的边军中连续两次神音响起，在场士兵无不跪拜这成了宗教宣扬上帝存在的有力证明——我神永昌！
+
+〖第21个月·帝崩〗
+80多岁的老帝皇在今日迎来终末大皇子下令封锁寝宫，首都全城戒严目前还没人知道，但又能瞒多久？
+
+〖第22个月·神诞〗
+巡夜修女在主厅发现教皇被钉在神像上，鲜血溅满神像，血还是温的骑士团封锁了全场
+
+〖第23个月·饥荒〗
+战争让庄稼无人打理没有余粮，饥饿逼得人们易子而食，现在要么变成别人的口粮，要么起义
+
+〖第24个月·动乱〗
+老帝皇的死最终传了出去帝国军军心不稳，骑士团因教皇之死被迫回撤，这也给了各方势力插手军队的机会</pre>
+<script>
+function toggleSidebar() {
+  var sidebar = document.querySelector('.sidebar');
+  var content = document.querySelector('.content');
+  var overlay = document.querySelector('.sidebar-overlay');
+  var btn = document.querySelector('.sidebar-toggle-btn');
+  var innerBtn = document.querySelector('.sidebar .toggle-btn');
+  
+  if (window.innerWidth <= 768) {
+    // 手机端：滑入/滑出
+    var isOpen = sidebar.classList.contains('open');
+    if (isOpen) {
+      sidebar.classList.remove('open');
+      if (overlay) overlay.classList.remove('show');
+      if (innerBtn) innerBtn.textContent = '☰';
+    } else {
+      sidebar.classList.add('open');
+      if (overlay) overlay.classList.add('show');
+      if (innerBtn) innerBtn.textContent = '✕';
+    }
+  } else {
+    // 桌面端：完全收起/展开
+    sidebar.classList.toggle('collapsed');
+    content.classList.toggle('expanded');
+    if (btn) {
+      btn.textContent = sidebar.classList.contains('collapsed') ? '☰' : '✕';
+    }
+  }
+}
+
+function closeSidebar() {
+  if (window.innerWidth <= 768) {
+    var sidebar = document.querySelector('.sidebar');
+    var overlay = document.querySelector('.sidebar-overlay');
+    var innerBtn = document.querySelector('.sidebar .toggle-btn');
+    if (sidebar) sidebar.classList.remove('open');
+    if (overlay) overlay.classList.remove('show');
+    if (innerBtn) innerBtn.textContent = '☰';
+  }
+}
+
+function switchSection(id) {
+  document.querySelectorAll('.content section').forEach(function(s) {
+    s.classList.remove('active');
+  });
+  var target = document.getElementById(id);
+  if (target) {
+    target.classList.add('active');
+  }
+  // 手机端自动关闭侧边栏
+  if (window.innerWidth <= 768) {
+    var sidebar = document.querySelector('.sidebar');
+    var overlay = document.querySelector('.sidebar-overlay');
+    var innerBtn = document.querySelector('.sidebar .toggle-btn');
+    if (sidebar && sidebar.classList.contains('open')) {
+      sidebar.classList.remove('open');
+      if (overlay) overlay.classList.remove('show');
+      if (innerBtn) innerBtn.textContent = '☰';
+    }
+  }
+}
+</script>
+</body>
+</html>
